@@ -1,0 +1,36 @@
+{
+  "name": "@agniswap/core",
+  "version": "1.0.1",
+  "description": "Core smart contracts of Agni Protocol",
+  "license": "GPL-2.0-or-later",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "agniswap",
+    "core"
+  ],
+  "files": [
+    "contracts/interfaces",
+    "contracts/libraries",
+    "artifacts/contracts/AgniFactory.sol/AgniFactory.json",
+    "artifacts/contracts/AgniPool.sol/AgniPool.json",
+    "artifacts/contracts/interfaces/**/*.json",
+    "!artifacts/contracts/interfaces/**/*.dbg.json"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "deploy": "hardhat run scripts/deploy.ts --network",
+    "pool_address": "hardhat run scripts/pool_address.ts --network",
+    "verify": "hardhat run scripts/verify.ts --network"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "hardhat": "^2.14.0",
+    "dotenv": "^16.0.3",
+    "hardhat-contract-sizer": "^2.6.1",
+    "hardhat-gas-reporter": "^1.0.9"
+  }
+}

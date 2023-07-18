@@ -1,0 +1,45 @@
+{
+  "name": "@agniswap/periphery",
+  "version": "1.0.1",
+  "description": "Peripheral smart contracts for interacting with Agni Protocol",
+  "license": "GPL-2.0-or-later",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "agniswap",
+    "periphery"
+  ],
+  "files": [
+    "contracts/base",
+    "contracts/interfaces",
+    "contracts/libraries",
+    "artifacts/contracts/**/*.json",
+    "!artifacts/contracts/**/*.dbg.json",
+    "!artifacts/contracts/test/**/*",
+    "!artifacts/contracts/base/**/*"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "deploy": "hardhat run scripts/deploy.ts --network ",
+    "init_pool": "hardhat run scripts/init_pool.ts --network",
+    "mint": "hardhat run scripts/mint.ts --network",
+    "verify": "hardhat run scripts/verify.ts --network",
+    "quote": "hardhat run scripts/quoteV2.ts --network"
+  },
+  "devDependencies": {
+    "@agniswap/core": "file:../core",
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "@openzeppelin/contracts": "3.4.2-solc-0.7",
+    "@openzeppelin/contracts-upgradeable": "3.4.2-solc-0.7",
+    "@openzeppelin/hardhat-upgrades": "^1.22.1",
+    "@uniswap/lib": "4.0.1-alpha",
+    "base64-sol": "1.1.0",
+    "dotenv": "^16.0.3",
+    "hardhat": "^2.14.0",
+    "hardhat-contract-sizer": "^2.6.1",
+    "hardhat-gas-reporter": "^1.0.9"
+  }
+}

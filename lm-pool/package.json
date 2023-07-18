@@ -1,0 +1,38 @@
+{
+  "name": "@agniswap/lm-pool",
+  "version": "1.0.0",
+  "description": "LiquidityMining Pool smart contracts for interacting with Agni Protocol",
+  "license": "GPL-2.0-or-later",
+  "scripts": {
+    "deploy": "hardhat run --network mantleTestnet scripts/deploy.ts",
+    "verify": "hardhat run --network mantleTestnet scripts/verify.ts"
+  },
+  "devDependencies": {
+    "@agniswap/core": "file:../core",
+    "@chainlink/contracts": "0.6.1",
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "@openzeppelin/contracts": "^3.4.2-solc-0.7",
+    "@openzeppelin/contracts-upgradeable": "3.4.2-solc-0.7",
+    "@openzeppelin/hardhat-upgrades": "^1.22.1",
+    "dotenv": "^16.0.3",
+    "hardhat": "^2.14.0",
+    "hardhat-contract-sizer": "^2.6.1",
+    "hardhat-gas-reporter": "^1.0.9"
+  },
+  "dependencies": {
+    "@agniswap/periphery": "^1.0.1",
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
+    "@nomiclabs/hardhat-ethers": "^2.0.0",
+    "@nomiclabs/hardhat-etherscan": "^3.0.0",
+    "@typechain/ethers-v5": "^10.1.0",
+    "@typechain/hardhat": "^6.1.2",
+    "@types/chai": "^4.2.0",
+    "@types/mocha": ">=9.1.0",
+    "solidity-coverage": "^0.8.1",
+    "ts-node": "^10.9.1",
+    "typechain": "^8.1.0",
+    "typescript": "^5.1.3",
+    "web3": "^4.0.1"
+  }
+}

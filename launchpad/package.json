@@ -1,0 +1,26 @@
+{
+  "name": "@agniswap/launchpad",
+  "version": "1.0.0",
+  "description": "Launchpad smart contracts for interacting with Agni Protocol",
+  "license": "GPL-2.0-or-later",
+  "scripts": {
+    "deploy": "hardhat run --network mantleTestnet scripts/deploy.ts",
+    "create_pool": "hardhat run --network mantleTestnet scripts/create_pool.ts",
+    "verify": "hardhat run --network mantleTestnet scripts/verify.ts",
+    "add_staking_token": "hardhat run --network mantleTestnet scripts/add_staking_token.ts",
+    "stake": "hardhat run --network mantleTestnet scripts/stake.ts"
+  },
+  "devDependencies": {
+    "@agniswap/core": "file:../core",
+    "@agniswap/periphery": "file:../periphery",
+    "@chainlink/contracts": "0.6.1",
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "@openzeppelin/contracts": "3.4.2-solc-0.7",
+    "@openzeppelin/contracts-upgradeable": "3.4.2-solc-0.7",
+    "@openzeppelin/hardhat-upgrades": "^1.22.1",
+    "dotenv": "^16.0.3",
+    "hardhat": "^2.14.0",
+    "hardhat-contract-sizer": "^2.6.1",
+    "hardhat-gas-reporter": "^1.0.9"
+  }
+}
