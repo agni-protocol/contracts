@@ -1,6 +1,6 @@
-import { ethers } from "hardhat";
+import { ethers,network } from "hardhat";
 import { BigNumber } from "@ethersproject/bignumber";
-const utils = require("../common/utils");
+const utils = require("../../common/utils");
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -9,7 +9,10 @@ const raiseToken = "0x82A2eb46a64e4908bBC403854bc8AA699bF058E9";      // USDC
 let sellingToken;
 
 async function main() {
-  let contractAddresses = utils.getContractAddresses("");
+  const networkName = await network.name;
+  console.log("Network name=", networkName);
+
+  let contractAddresses = utils.getContractAddresses(networkName,"");
 
   let AGNI = process.env.AGNI !== undefined ? process.env.AGNI : "";
   console.log("AGNI addresses:", AGNI);

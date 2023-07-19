@@ -1,10 +1,16 @@
-import { ethers,upgrades } from "hardhat";
-const utils = require("../common/utils");
+import { ethers,upgrades,network } from "hardhat";
+const utils = require("../../common/utils");
 import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-  let coreContractAddresses = utils.getContractAddresses(`../core/deployments/${process.env.NETWORK}.json`);
+  const networkName = await network.name;
+  console.log("Network name=", networkName);
+
+  let coreContractAddresses = utils.getContractAddresses(
+    networkName,
+    `../core/deployments/${networkName}.json`
+  );
   console.log("core contract addresses:", coreContractAddresses);
 
   let WMNT = process.env.WMNT !== undefined ? process.env.WMNT : "";
@@ -69,7 +75,7 @@ async function main() {
     NonfungiblePositionManager: nonfungiblePositionManager.address,
     AgniInterfaceMulticall: multicall.address,
   };
-  await utils.writeContractAddresses(contractAddresses);
+  await utils.writeContractAddresses(networkName,contractAddresses);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

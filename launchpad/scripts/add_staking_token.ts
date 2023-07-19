@@ -1,10 +1,13 @@
-import { ethers } from "hardhat";
-const utils = require("../common/utils");
+import { ethers,network } from "hardhat";
+const utils = require("../../common/utils");
 import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-  let contractAddresses = utils.getContractAddresses("");
+  const networkName = await network.name;
+  console.log("Network name=", networkName);
+  
+  let contractAddresses = utils.getContractAddresses(networkName,"");
 
   let WMNT = process.env.WMNT !== undefined ? process.env.WMNT : "";
   console.log("WMNT addresses:", WMNT);

@@ -1,9 +1,13 @@
 const hre = require("hardhat");
+const {network} = require("hardhat");
 const utils = require("../common/utils");
 
 async function main() {
+  const networkName = await network.name;
+  console.log("Network name=", networkName);
+
   let peripheryContractAddresses = utils.getContractAddresses(
-    `../periphery/deployments/${process.env.NETWORK}.json`
+    networkName,`../periphery/deployments/${networkName}.json`
   );
   console.log("periphery contract addresses:", peripheryContractAddresses);
 
@@ -13,7 +17,7 @@ async function main() {
   let AGNI = process.env.AGNI !== undefined ? process.env.AGNI : "";
   console.log("AGNI addresses:", AGNI);
 
-  let contractAddresses = utils.getContractAddresses("");
+  let contractAddresses = utils.getContractAddresses(networkName,"");
 
   await hre.run("verify:verify", {
     address: contractAddresses.MasterChef,

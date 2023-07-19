@@ -1,8 +1,12 @@
 const hre = require("hardhat");
-const utils = require("../common/utils");
+const {network} = require("hardhat");
+const utils = require("../../common/utils");
 
 async function main() {
-  let contractAddresses = utils.getContractAddresses("");
+  const networkName = await network.name;
+  console.log("Network name=", networkName);
+  
+  let contractAddresses = utils.getContractAddresses(networkName,"");
 
   await hre.run("verify:verify", {
     address: contractAddresses.AgniPoolDeployer,

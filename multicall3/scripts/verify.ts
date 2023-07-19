@@ -1,10 +1,12 @@
 const hre = require("hardhat");
-const utils = require("../common/utils");
+const {network} = require("hardhat");
+const utils = require("../../common/utils");
 import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-  let contractAddresses = utils.getContractAddresses("");
+  let networkName = network.name;
+  let contractAddresses = utils.getContractAddresses(networkName,"");
   console.log("multicall3 contract addresses:", contractAddresses);
 
   await hre.run("verify:verify", {

@@ -1,7 +1,10 @@
-import { ethers } from "hardhat";
-const utils = require("../common/utils");
+import { ethers,network } from "hardhat";
+const utils = require("../../common/utils");
 
 async function main() {
+  const networkName = await network.name;
+  console.log("Network name=", networkName);
+
   const AgniPoolDeployer = await ethers.getContractFactory(
     "AgniPoolDeployer"
   );
@@ -31,7 +34,7 @@ async function main() {
     InitCodeHashAddress: outputCodeHash.address,
     InitCodeHash: hash,
   };
-  await utils.writeContractAddresses(contractAddresses);
+  await utils.writeContractAddresses(networkName,contractAddresses);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

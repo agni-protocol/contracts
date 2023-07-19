@@ -1,4 +1,4 @@
-import { ethers } from "hardhat";
+import { ethers,network } from "hardhat";
 const utils = require("../common/utils");
 import { encodePath } from "../test/shared/path";
 
@@ -12,8 +12,11 @@ enum FeeAmount {
 }
 
 async function main() {
+   const networkName = await network.name;
+   console.log("Network name=", networkName);
+
     const [owner] = await ethers.getSigners();
-    let contractAddresses = utils.getContractAddresses("");
+    let contractAddresses = utils.getContractAddresses(networkName,"");
     console.log("contractAddresses:", contractAddresses);
 
     const QuoterV2 = await ethers.getContractAt(

@@ -1,10 +1,17 @@
-import { ethers } from "hardhat";
-const utils = require("../common/utils");
-
-const lmPoolDeployer = "0x44FaccB643Adf92AE208425EFbC45EE0Fedc9c3D";
+import { ethers,network } from "hardhat";
+const utils = require("../../common/utils");
 
 async function main() {
-  let contractAddresses = utils.getContractAddresses("");
+  const networkName = await network.name;
+  console.log("Network name=", networkName);
+
+  let lmpoolContractAddresses = utils.getContractAddresses(
+    networkName,
+    `../lm-pool/deployments/${networkName}.json`
+  );
+  console.log("lm-pool contract addresses:", lmpoolContractAddresses);
+
+  let contractAddresses = utils.getContractAddresses(networkName,"");
 
   const MasterChef = await ethers.getContractFactory("MasterChef");
   const masterChef = await MasterChef.attach(contractAddresses.MasterChef);
@@ -14,7 +21,9 @@ async function main() {
   console.log("master chef lm deploy:", LMPoolDeployer);
 
   if (LMPoolDeployer == "0x0000000000000000000000000000000000000000") {
-    let setLmDeployer = await masterChef.setLMPoolDeployer(lmPoolDeployer);
+    let setLmDeployer = await masterChef.setLMPoolDeployer(
+      lmpoolContractAddresses.AgniLmPoolDeployer
+    );
     console.log("set lmPoolDeployer tx: ", setLmDeployer.hash);
   }
 

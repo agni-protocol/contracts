@@ -1,16 +1,23 @@
 const hre = require("hardhat");
-const utils = require("../common/utils");
+const {network} = require("hardhat");
+const utils = require("../../common/utils");
 import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-  let peripheryContractAddresses = utils.getContractAddresses(`../periphery/deployments/${process.env.NETWORK}.json`);
+  const networkName = await network.name;
+  console.log("Network name=", networkName);
+
+  let peripheryContractAddresses = utils.getContractAddresses(
+    networkName,
+    `../periphery/deployments/${networkName}.json`
+  );
   console.log("periphery contract addresses:", peripheryContractAddresses);
 
   let WMNT = process.env.WMNT !== undefined ? process.env.WMNT : "";
   console.log("WMNT addresses:", WMNT);
 
-  let contractAddresses = utils.getContractAddresses("");
+  let contractAddresses = utils.getContractAddresses(networkName,"");
   console.log(contractAddresses);
 
    const lockPeriod = 600;

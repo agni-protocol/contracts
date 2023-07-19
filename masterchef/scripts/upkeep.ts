@@ -1,8 +1,11 @@
-import { ethers } from "hardhat";
-const utils = require("../common/utils");
+import { ethers,network } from "hardhat";
+const utils = require("../../common/utils");
 
 async function main() {
-  let contractAddresses = utils.getContractAddresses("");
+  const networkName = await network.name;
+  console.log("Network name=", networkName);
+
+  let contractAddresses = utils.getContractAddresses(networkName,"");
 
   const MasterChefV3Receiver = await ethers.getContractFactory("MasterChefV3Receiver");
   const masterChefRecevier = await MasterChefV3Receiver.attach(

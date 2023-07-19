@@ -1,11 +1,15 @@
-import { ethers, upgrades } from "hardhat";
+import { ethers, upgrades,network } from "hardhat";
 const utils = require("../common/utils");
 import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
+  const networkName = await network.name;
+  console.log("Network name=", networkName);
+
   let peripheryContractAddresses = utils.getContractAddresses(
-    `../periphery/deployments/${process.env.NETWORK}.json`
+    networkName,
+    `../periphery/deployments/${networkName}.json`
   );
   console.log("periphery contract addresses:", peripheryContractAddresses);
 
@@ -92,7 +96,7 @@ async function main() {
     IdoPoolFactory: idoPoolFactory.address,
     InsurancePool: insurancePool.address,
   };
-  await utils.writeContractAddresses(contractAddresses);
+  await utils.writeContractAddresses(networkName,contractAddresses);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

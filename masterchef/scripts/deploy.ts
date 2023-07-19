@@ -1,10 +1,13 @@
-import { ethers } from "hardhat";
-const utils = require("../common/utils");
+import { ethers,network } from "hardhat";
+const utils = require("../../common/utils");
 import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-  let peripheryContractAddresses = utils.getContractAddresses(`../periphery/deployments/${process.env.NETWORK}.json`);
+  const networkName = await network.name;
+  console.log("Network name=", networkName);
+
+  let peripheryContractAddresses = utils.getContractAddresses(networkName,`../periphery/deployments/${networkName}.json`);
   console.log("periphery contract addresses:", peripheryContractAddresses);
 
   let WMNT = process.env.WMNT !== undefined ? process.env.WMNT : "";
@@ -34,7 +37,7 @@ async function main() {
     MasterChef: masterChef.address,
     MasterChefV3Receiver: masterChefV3Receiver.address,
   };
-  await utils.writeContractAddresses(contractAddresses);
+  await utils.writeContractAddresses(networkName,contractAddresses);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

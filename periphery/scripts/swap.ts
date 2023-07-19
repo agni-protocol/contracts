@@ -1,4 +1,4 @@
-import { ethers } from "hardhat";
+import { ethers,network } from "hardhat";
 import { BigNumber } from "@ethersproject/bignumber";
 const utils = require("../common/utils");
 
@@ -6,8 +6,11 @@ const agniAddress = "0x74a0E7118480bdfF5f812c7a879a41db09ac2c39";
 const wmntAddress = "0xEa12Be2389c2254bAaD383c6eD1fa1e15202b52A";
 
 async function main() {
+   const networkName = await network.name;
+   console.log("Network name=", networkName);
+
   const [owner] = await ethers.getSigners();
-  let contractAddresses = utils.getContractAddresses("");
+  let contractAddresses = utils.getContractAddresses(networkName,"");
 
   const swapRouter = await ethers.getContractAt(
     "SwapRouter",

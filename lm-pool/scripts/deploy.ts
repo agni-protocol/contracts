@@ -1,18 +1,21 @@
-import { ethers } from "hardhat";
+import { ethers,network } from "hardhat";
 import { abi } from "@agniswap/core/artifacts/contracts/AgniFactory.sol/AgniFactory.json";
-const utils = require("../common/utils");
+const utils = require("../../common/utils");
 
 import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
+  const networkName = await network.name;
+  console.log("Network name=", networkName);
+
    let coreContractAddresses = utils.getContractAddresses(
-     `../core/deployments/${process.env.NETWORK}.json`
+     networkName,`../core/deployments/${networkName}.json`
    );
    console.log("core contract addresses:", coreContractAddresses);
 
     let masterChefContractAddresses = utils.getContractAddresses(
-      `../masterChef/deployments/${process.env.NETWORK}.json`
+      networkName,`../masterChef/deployments/${networkName}.json`
     );
     console.log("masterChef contract addresses:", masterChefContractAddresses);
 
@@ -33,7 +36,7 @@ async function main() {
   let contractAddresses = {
     AgniLmPoolDeployer: agniLmPoolDeployer.address,
   };
-  await utils.writeContractAddresses(contractAddresses);
+  await utils.writeContractAddresses(networkName,contractAddresses);
 
   const [owner] = await ethers.getSigners();
   const agniFactory = new ethers.Contract(

@@ -1,14 +1,18 @@
 const hre = require("hardhat");
-const utils = require("../common/utils");
+const {network} = require("hardhat");
+const utils = require("../../common/utils");
 import dotenv from "dotenv";
 dotenv.config();
 
 
 async function main() {
-  let contractAddresses = utils.getContractAddresses("");
+  const networkName = await network.name;
+  console.log("Network name=", networkName);
+
+  let contractAddresses = utils.getContractAddresses(networkName,"");
 
    let masterChefContractAddresses = utils.getContractAddresses(
-     `../masterChef/deployments/${process.env.NETWORK}.json`
+     networkName,`../masterChef/deployments/${process.env.NETWORK}.json`
    );
    console.log("masterChef contract addresses:", masterChefContractAddresses);
 

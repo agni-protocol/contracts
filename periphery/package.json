@@ -28,7 +28,8 @@
     "init_pool": "hardhat run scripts/init_pool.ts --network",
     "mint": "hardhat run scripts/mint.ts --network",
     "verify": "hardhat run scripts/verify.ts --network",
-    "quote": "hardhat run scripts/quoteV2.ts --network"
+    "quote": "hardhat run scripts/quoteV2.ts --network",
+    "pool_address": "hardhat run scripts/pool_address.ts"
   },
   "devDependencies": {
     "@agniswap/core": "file:../core",

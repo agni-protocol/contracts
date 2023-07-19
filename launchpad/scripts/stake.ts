@@ -1,12 +1,15 @@
-import { ethers } from "hardhat";
-const utils = require("../common/utils");
+import { ethers,network } from "hardhat";
+const utils = require("../../common/utils");
 import { BigNumber } from "@ethersproject/bignumber";
 import dotenv from "dotenv";
 dotenv.config();
 
 
 async function main() {
-  let contractAddresses = utils.getContractAddresses("");
+  const networkName = await network.name;
+  console.log("Network name=", networkName);
+
+  let contractAddresses = utils.getContractAddresses(networkName,"");
 
   let AGNI = process.env.AGNI !== undefined ? process.env.AGNI : "";
   console.log("AGNI addresses:", AGNI);
