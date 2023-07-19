@@ -1,5 +1,5 @@
 import { ethers,network } from "hardhat";
-import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
+import { BigNumber } from "@ethersproject/bignumber";
 const utils = require("../../common/utils");
 
 let wmntAddress="";
@@ -15,11 +15,11 @@ async function main() {
   wmntAddress = contractAddresses.WMNT;
 
   const MNT = await ethers.getContractAt("WMNT", wmntAddress);
-  let mammApproveTx = await MNT.approve(
+  let wmntApproveTx = await MNT.approve(
     contractAddresses.NonfungiblePositionManager,
     BigNumber.from("10000000000000000000000000000")
   );
-  console.log("MNT approve tx:", mammApproveTx.hash);
+  console.log("MNT approve tx:", wmntApproveTx.hash);
 
   const USDC = await ethers.getContractAt("SelfSufficientERC20", usdcAddress);
   let usdcApproveTx = await USDC.approve(
@@ -33,14 +33,24 @@ async function main() {
     contractAddresses.NonfungiblePositionManager
   );
 
+  let token0 =  wmntAddress < usdcAddress ? wmntAddress : usdcAddress;
+  let token1 =   usdcAddress > wmntAddress ? usdcAddress : wmntAddress;
+  console.log("token0:", token0);
+  console.log("token1:", token1);
+
+  let usdcBalance = await USDC.balanceOf(owner.address);
+  let wmntBalance = await MNT.balanceOf(owner.address);
+  console.log("usdc balance:", usdcBalance);
+  console.log("wmnt balance:", wmntBalance);
+
   let mintTx = await positionManager.mint({
-    token0: wmntAddress,
-    token1: usdcAddress,
+    token0: token0,
+    token1: token1,
     fee: 500,
     tickLower: -100,
     tickUpper: 100,
-    amount0Desired: "100000000000000000",
-    amount1Desired: "1000000",
+    amount0Desired: "500000",
+    amount1Desired: "1000000000000000000",
     amount0Min: ethers.constants.Zero,
     amount1Min: ethers.constants.Zero,
     recipient: owner.address,

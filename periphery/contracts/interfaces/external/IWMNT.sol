@@ -10,4 +10,12 @@ interface IWMNT is IERC20 {
 
     /// @notice Withdraw wrapped ether to get ether
     function withdraw(uint256) external;
+
+    function totalSupply() override external view returns (uint);
+
+    function approve(address guy, uint wad) override external returns (bool);
+
+    function transfer(address dst, uint wad) override external returns (bool);
+
+    function transferFrom(address src, address dst, uint wad) override external returns (bool);
 }

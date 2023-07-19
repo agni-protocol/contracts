@@ -2,7 +2,7 @@ import { ethers,network } from "hardhat";
 const utils = require("../../common/utils");
 
 let wmntAddress = "";
-const usdtAddress = "0x201EBa5CC46D216Ce6DC03F6a759e8E766e956aE";
+const usdcAddress = "0x82A2eb46a64e4908bBC403854bc8AA699bF058E9";
 
 async function main() {
   const networkName = await network.name;
@@ -18,8 +18,8 @@ async function main() {
   );
 
   let initPoolTx = await positionManager.createAndInitializePoolIfNecessary(
-    wmntAddress < usdtAddress ? wmntAddress : usdtAddress,
-    usdtAddress > wmntAddress ? usdtAddress : wmntAddress,
+    wmntAddress < usdcAddress ? wmntAddress : usdcAddress,
+    usdcAddress > wmntAddress ? usdcAddress : wmntAddress,
     500,
     ethers.BigNumber.from("2").pow(96)
   );

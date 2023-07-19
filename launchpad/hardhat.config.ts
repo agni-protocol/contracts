@@ -29,13 +29,11 @@ const config: HardhatUserConfig = {
   networks: {
     mantleTestnet: {
       url: process.env.MANTLE_TESTNET_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts: [owner, keeper],
     },
     mantleMainnet: {
       url: process.env.MANTLE_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts: [owner, keeper],
     },
   },
   gasReporter: {
