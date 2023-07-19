@@ -2,7 +2,7 @@ import { ethers,network } from "hardhat";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 const utils = require("../../common/utils");
 
-const wmntAddress = "0xEa12Be2389c2254bAaD383c6eD1fa1e15202b52A";
+let wmntAddress="";
 const usdcAddress = "0x82A2eb46a64e4908bBC403854bc8AA699bF058E9";
 
 async function main() {
@@ -12,6 +12,7 @@ async function main() {
   const [owner] = await ethers.getSigners();
   let contractAddresses = utils.getContractAddresses(networkName,"");
   console.log("contractAddresses:", contractAddresses);
+  wmntAddress = contractAddresses.WMNT;
 
   const MNT = await ethers.getContractAt("WMNT", wmntAddress);
   let mammApproveTx = await MNT.approve(

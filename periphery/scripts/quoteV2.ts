@@ -2,7 +2,6 @@ import { ethers,network } from "hardhat";
 const utils = require("../common/utils");
 import { encodePath } from "../test/shared/path";
 
-// const wmntAddress = "0xEa12Be2389c2254bAaD383c6eD1fa1e15202b52A";
 const agniAddress = "0x74a0E7118480bdfF5f812c7a879a41db09ac2c39";
 
 enum FeeAmount {

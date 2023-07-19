@@ -3,7 +3,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 const utils = require("../common/utils");
 
 const agniAddress = "0x74a0E7118480bdfF5f812c7a879a41db09ac2c39";
-const wmntAddress = "0xEa12Be2389c2254bAaD383c6eD1fa1e15202b52A";
+let wmntAddress = "";
 
 async function main() {
    const networkName = await network.name;
@@ -11,6 +11,7 @@ async function main() {
 
   const [owner] = await ethers.getSigners();
   let contractAddresses = utils.getContractAddresses(networkName,"");
+  wmntAddress = contractAddresses.WMNT;
 
   const swapRouter = await ethers.getContractAt(
     "SwapRouter",

@@ -13,7 +13,12 @@ async function main() {
   );
   console.log("core contract addresses:", coreContractAddresses);
 
-  let WMNT = process.env.WMNT !== undefined ? process.env.WMNT : "";
+  let WMNT="";
+  if (networkName == "mantleMainnet"){
+    WMNT = "0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8";
+  }else{
+    WMNT = "0xEa12Be2389c2254bAaD383c6eD1fa1e15202b52A";
+  }
   console.log("WMNT addresses:", WMNT);
 
   const Multicall = await ethers.getContractFactory("AgniInterfaceMulticall");

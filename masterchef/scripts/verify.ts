@@ -11,11 +11,18 @@ async function main() {
   );
   console.log("periphery contract addresses:", peripheryContractAddresses);
 
-  let WMNT = process.env.WMNT !== undefined ? process.env.WMNT : "";
-  console.log("WMNT addresses:", WMNT);
+  let WMNT = "";
+  let AGNI = "";
 
-  let AGNI = process.env.AGNI !== undefined ? process.env.AGNI : "";
-  console.log("AGNI addresses:", AGNI);
+ if (networkName == "mantleMainnet") {
+   WMNT = "0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8";
+   AGNI = "";
+ } else {
+   WMNT = "0xEa12Be2389c2254bAaD383c6eD1fa1e15202b52A";
+   AGNI = "0x113667C49c053230D3232AC7d74F471Dcd42f11E";
+ }
+ console.log("WMNT addresses:", WMNT);
+ console.log("AGNI addresses:", AGNI);
 
   let contractAddresses = utils.getContractAddresses(networkName,"");
 
