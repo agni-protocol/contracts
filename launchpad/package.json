@@ -4,11 +4,11 @@
   "description": "Launchpad smart contracts for interacting with Agni Protocol",
   "license": "GPL-2.0-or-later",
   "scripts": {
-    "deploy": "hardhat run --network mantleTestnet scripts/deploy.ts",
-    "create_pool": "hardhat run --network mantleTestnet scripts/create_pool.ts",
-    "verify": "hardhat run --network mantleTestnet scripts/verify.ts",
-    "add_staking_token": "hardhat run --network mantleTestnet scripts/add_staking_token.ts",
-    "stake": "hardhat run --network mantleTestnet scripts/stake.ts"
+    "deploy": "hardhat run scripts/deploy.ts --network",
+    "create_pool": "hardhat run scripts/create_pool.ts --network",
+    "verify": "hardhat run scripts/verify.ts --network",
+    "add_staking_token": "hardhat run scripts/add_staking_token.ts --network",
+    "stake": "hardhat run scripts/stake.ts --network"
   },
   "devDependencies": {
     "@agniswap/core": "file:../core",

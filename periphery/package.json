@@ -24,6 +24,7 @@
   },
   "scripts": {
     "deploy": "hardhat run scripts/deploy.ts --network ",
+    "deploy_slf": "hardhat run scripts/deploy_slf.ts --network ",
     "init_pool": "hardhat run scripts/init_pool.ts --network",
     "mint": "hardhat run scripts/mint.ts --network",
     "verify": "hardhat run scripts/verify.ts --network",

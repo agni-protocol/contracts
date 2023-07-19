@@ -4,8 +4,8 @@
   "description": "LiquidityMining Pool smart contracts for interacting with Agni Protocol",
   "license": "GPL-2.0-or-later",
   "scripts": {
-    "deploy": "hardhat run --network mantleTestnet scripts/deploy.ts",
-    "verify": "hardhat run --network mantleTestnet scripts/verify.ts"
+    "deploy": "hardhat run  scripts/deploy.ts --network",
+    "verify": "hardhat run  scripts/verify.ts --network"
   },
   "devDependencies": {
     "@agniswap/core": "file:../core",
@@ -20,7 +20,7 @@
     "hardhat-gas-reporter": "^1.0.9"
   },
   "dependencies": {
-    "@agniswap/periphery": "^1.0.1",
+    "@agniswap/periphery": "file:../periphery",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomiclabs/hardhat-ethers": "^2.0.0",

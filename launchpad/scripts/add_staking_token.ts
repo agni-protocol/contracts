@@ -1,12 +1,16 @@
 import { ethers } from "hardhat";
 const utils = require("../common/utils");
-const fs = require("fs");
-
-const agniAddress = "0x74a0E7118480bdfF5f812c7a879a41db09ac2c39";
-const wMNT = "0xEa12Be2389c2254bAaD383c6eD1fa1e15202b52A";
+import dotenv from "dotenv";
+dotenv.config();
 
 async function main() {
   let contractAddresses = utils.getContractAddresses("");
+
+  let WMNT = process.env.WMNT !== undefined ? process.env.WMNT : "";
+  console.log("WMNT addresses:", WMNT);
+
+  let AGNI = process.env.AGNI !== undefined ? process.env.AGNI : "";
+  console.log("AGNI addresses:", AGNI);
 
   const [owner, keeper] = await ethers.getSigners();
 
@@ -18,28 +22,27 @@ async function main() {
     contractAddresses.ScoreCalculator.Proxy
   );
 
-
   // add agni
-  let agniIsStakingToken = await stakingPool.isStakingToken(agniAddress);
+  let agniIsStakingToken = await stakingPool.isStakingToken(AGNI);
   if (!agniIsStakingToken){
-      let addTx = await stakingPool.addStakingToken(agniAddress);
+      let addTx = await stakingPool.addStakingToken(AGNI);
       console.log("addStakingToken:", addTx.hash);
   }
 
-  let scoreMama = await scoreCalculator.agniToken();
-  console.log("score agni token:", scoreMama);
+  let scoreAgni = await scoreCalculator.agniToken();
+  console.log("score agni token:", scoreAgni);
 
-  if (scoreMama == "0x0000000000000000000000000000000000000000") {
-    let setAgniTokenTx = await scoreCalculator.setAgniToken(agniAddress);
+  if (scoreAgni == "0x0000000000000000000000000000000000000000") {
+    let setAgniTokenTx = await scoreCalculator.setAgniToken(AGNI);
     console.log("setAgniTokenTx :", setAgniTokenTx.hash);
   }
 
   // add LP
-  let agniMntFee100Lp = await scoreCalculator.isPoolSupported(agniAddress, wMNT,100);
+  let agniMntFee100Lp = await scoreCalculator.isPoolSupported(AGNI, WMNT,100);
   console.log("scoreCalculator  isPoolSupported:", agniMntFee100Lp);
   if (!agniMntFee100Lp){
-    let addMamaMntFee100LpTx = await scoreCalculator.supportPool(agniAddress,wMNT,100);
-    console.log("addMamaMntFee100LpTx:", addMamaMntFee100LpTx.hash);
+    let addAgniMntFee100LpTx = await scoreCalculator.supportPool(AGNI,WMNT,100);
+    console.log("addAgniMntFee100LpTx:", addAgniMntFee100LpTx.hash);
   }
 }
 

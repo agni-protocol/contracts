@@ -1,12 +1,19 @@
 import { ethers } from "hardhat";
 import { BigNumber } from "@ethersproject/bignumber";
 const utils = require("../common/utils");
+import dotenv from "dotenv";
+dotenv.config();
 
 const raiseToken = "0x82A2eb46a64e4908bBC403854bc8AA699bF058E9";      // USDC
-const sellingToken = "0x74a0E7118480bdfF5f812c7a879a41db09ac2c39";      // AGNI
+// const sellingToken = "0x74a0E7118480bdfF5f812c7a879a41db09ac2c39";      // AGNI
+let sellingToken;
 
 async function main() {
   let contractAddresses = utils.getContractAddresses("");
+
+  let AGNI = process.env.AGNI !== undefined ? process.env.AGNI : "";
+  console.log("AGNI addresses:", AGNI);
+  sellingToken = AGNI;
 
   const [owner, keeper] = await ethers.getSigners();
 

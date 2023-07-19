@@ -1,11 +1,15 @@
 import { ethers } from "hardhat";
 const utils = require("../common/utils");
 import { BigNumber } from "@ethersproject/bignumber";
+import dotenv from "dotenv";
+dotenv.config();
 
-const agniAddress = "0x74a0E7118480bdfF5f812c7a879a41db09ac2c39";
 
 async function main() {
   let contractAddresses = utils.getContractAddresses("");
+
+  let AGNI = process.env.AGNI !== undefined ? process.env.AGNI : "";
+  console.log("AGNI addresses:", AGNI);
 
   const [owner, keeper] = await ethers.getSigners();
 
@@ -19,12 +23,12 @@ async function main() {
   console.log("score agni token:", scoreMama);
 
   if (scoreMama == "0x0000000000000000000000000000000000000000"){
-    let setAgniTokenTx = await scoreCalculator.setAgniToken(agniAddress);
+    let setAgniTokenTx = await scoreCalculator.setAgniToken(AGNI);
     console.log("setAgniTokenTx :", setAgniTokenTx.hash);
   }
 
   let score = await scoreCalculator.calculate(
-    agniAddress,
+    AGNI,
     BigNumber.from("1000000000000000000000")
   );
   console.log("score:", score);
@@ -41,7 +45,7 @@ async function main() {
     return;
   }
 
-  let isStakingToken = await stakingPool.isStakingToken(agniAddress);
+  let isStakingToken = await stakingPool.isStakingToken(AGNI);
   console.log("isStakingToken:", isStakingToken);
 
   let tier = await stakingPool.getTierByScore(score);
@@ -49,24 +53,24 @@ async function main() {
 
   // check staking token
   if (!isStakingToken) {
-    let addTx = await stakingPool.addStakingToken(agniAddress);
+    let addTx = await stakingPool.addStakingToken(AGNI);
     console.log("addStakingToken:", addTx.hash);
   }
 
   // approve first
-  const AGNI = await ethers.getContractAt("SelfSufficientERC20", agniAddress);
+  const agni = await ethers.getContractAt("SelfSufficientERC20", AGNI);
 
-  let balance = await AGNI.balanceOf(owner.address);
+  let balance = await agni.balanceOf(owner.address);
   console.log("balance:", balance.toString());
 
-  let allownce = await AGNI.allowance(
+  let allownce = await agni.allowance(
     owner.address,
     contractAddresses.StakingPool
   );
   console.log("allownce:", allownce.toString());
 
   if (allownce.toString() == "0") {
-    let approveTx = await AGNI.approve(
+    let approveTx = await agni.approve(
       contractAddresses.StakingPool,
       BigNumber.from("10000000000000000000000000000")
     );
@@ -75,7 +79,7 @@ async function main() {
 
   //  do stake
   // let stakeTx = await stakingPool.stake(
-  //   agniAddress,
+  //   AGNI,
   //   BigNumber.from("1000000000000000000000")
   // );
   // console.log("stakeTx tx:", stakeTx.hash);

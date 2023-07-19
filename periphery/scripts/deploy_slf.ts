@@ -17,13 +17,9 @@ async function main() {
   // );
 
   const AGNI = await SelfSufficientERC20.deploy();
-  await AGNI.initlialize("MockDOGE", "DOGE", 18);
+  await AGNI.initlialize("MockAGNI", "AGNI", 18);
   console.log("AGNI", AGNI.address);
   await AGNI.mint(owner.address, BigNumber.from("10000000000000000000000000"));
-  await AGNI.mint(
-    "0xcbe467AFe8Bb198a3924BAD8B509a3160647313a",
-    BigNumber.from("10000000000000000000000000")
-  );
 
   // const TickMath = await ethers.getContractFactory("ExternalTickMath");
   // const tickMath = await TickMath.deploy();

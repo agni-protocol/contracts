@@ -4,15 +4,15 @@
   "description": "LiquidityMining MasterChef smart contracts for interacting with Agni Protocol",
   "license": "GPL-2.0-or-later",
   "scripts": {
-    "deploy": "hardhat run --network mantleTestnet scripts/deploy.ts",
-    "set_lmpool_deployer": "hardhat run --network mantleTestnet scripts/set_lm_deployer.ts",
-    "add_pool": "hardhat run --network mantleTestnet scripts/add_pool.ts",
-    "upkeep": "hardhat run --network mantleTestnet scripts/upkeep.ts",
-    "verify": "hardhat run --network mantleTestnet scripts/verify.ts"
+    "deploy": "hardhat run scripts/deploy.ts --network",
+    "set_lmpool_deployer": "hardhat run scripts/set_lm_deployer.ts --network",
+    "add_pool": "hardhat run scripts/add_pool.ts --network",
+    "upkeep": "hardhat run scripts/upkeep.ts --network",
+    "verify": "hardhat run scripts/verify.ts --network"
   },
   "devDependencies": {
+    "@agniswap/core": "file:../core",
     "@chainlink/contracts": "0.6.1",
-    "@agniswap/core": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",
     "@openzeppelin/contracts": "^4.9.1",
     "@openzeppelin/contracts-upgradeable": "^4.8.3",
