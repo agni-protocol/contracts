@@ -2,7 +2,8 @@ import { ethers,network } from "hardhat";
 const utils = require("../../common/utils");
 
 let wmntAddress = "";
-const usdcAddress = "0x82A2eb46a64e4908bBC403854bc8AA699bF058E9";
+// const usdcAddress = "0x82A2eb46a64e4908bBC403854bc8AA699bF058E9"; // testnet
+const usdcAddress = "0x201eba5cc46d216ce6dc03f6a759e8e766e956ae"; // mainnet
 
 async function main() {
   const networkName = await network.name;
@@ -16,6 +17,12 @@ async function main() {
     "NonfungiblePositionManager",
     contractAddresses.NonfungiblePositionManager
   );
+
+  let token0 = wmntAddress < usdcAddress ? wmntAddress : usdcAddress;
+  let token1 = usdcAddress > wmntAddress ? usdcAddress : wmntAddress;
+  console.log("token0:", token0);
+  console.log("token1:", token1);
+  return
 
   let initPoolTx = await positionManager.createAndInitializePoolIfNecessary(
     wmntAddress < usdcAddress ? wmntAddress : usdcAddress,

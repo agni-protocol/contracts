@@ -80,7 +80,7 @@ async function main() {
     NonfungiblePositionManager: nonfungiblePositionManager.address,
     AgniInterfaceMulticall: multicall.address,
   };
-  await utils.writeContractAddresses(networkName,contractAddresses);
+  await utils.writeContractAddresses(networkName, contractAddresses);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

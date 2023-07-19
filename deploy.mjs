@@ -15,17 +15,17 @@ if (!network || !networks[network]) {
 
 const c = await fs.readJson(`./core/deployments/${network}.json`)
 const p = await fs.readJson(`./periphery/deployments/${network}.json`)
-const m = await fs.readJson(`./masterchef/deployments/${network}.json`)
-const l = await fs.readJson(`./lm-pool/deployments/${network}.json`)
-const la = await fs.readJson(`./launchpad/deployments/${network}.json`)
+// const m = await fs.readJson(`./masterchef/deployments/${network}.json`)
+// const l = await fs.readJson(`./lm-pool/deployments/${network}.json`)
+// const la = await fs.readJson(`./launchpad/deployments/${network}.json`)
 const mu = await fs.readJson(`./multicall3/deployments/${network}.json`)
 
 const addresses = {
   ...c,
   ...p,
-  ...m,
-  ...l,
-  ...la,
+  // ...m,
+  // ...l,
+  // ...la,
   ...mu,
 }
 

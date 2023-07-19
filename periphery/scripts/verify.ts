@@ -1,6 +1,8 @@
 const hre = require("hardhat");
 const {network} = require("hardhat");
-const utils = require("../common/utils");
+const utils = require("../../common/utils");
+import dotenv from "dotenv";
+dotenv.config();
 
 async function main() {
    const networkName = await network.name;
@@ -21,7 +23,7 @@ async function main() {
   console.log("core contract addresses:", coreContractAddresses);
 
   let contractAddresses = utils.getContractAddresses(networkName,"");
-  console.log("periphery contract addresses:", coreContractAddresses);
+  console.log("periphery contract addresses:", contractAddresses);
 
   await hre.run("verify:verify", {
     address: contractAddresses.SwapRouter,
@@ -42,13 +44,6 @@ async function main() {
   });
 
   await hre.run("verify:verify", {
-    address: contractAddresses.NonfungibleTokenPositionDescriptor,
-    contract:
-      "contracts/NonfungibleTokenPositionDescriptorOffChain.sol:NonfungibleTokenPositionDescriptorOffChain",
-    constructorArguments: [process.env.TOKEN_URI],
-  });
-
-  await hre.run("verify:verify", {
     address: contractAddresses.NonfungiblePositionManager,
     contract:
       "contracts/NonfungiblePositionManager.sol:NonfungiblePositionManager",
@@ -58,6 +53,13 @@ async function main() {
       WMNT,
       contractAddresses.NonfungibleTokenPositionDescriptor,
     ],
+  });
+
+  await hre.run("verify:verify", {
+    address: contractAddresses.NonfungibleTokenPositionDescriptor,
+    contract:
+      "contracts/NonfungibleTokenPositionDescriptorOffChain.sol:NonfungibleTokenPositionDescriptorOffChain",
+    constructorArguments: [process.env.TOKEN_URI],
   });
 }
 
