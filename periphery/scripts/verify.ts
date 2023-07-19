@@ -31,13 +31,6 @@ async function main() {
     constructorArguments: [],
   });
 
-   await hre.run("verify:verify", {
-     address: contractAddresses.NFTDescriptor,
-     contract:
-       "contracts/NFTDescriptor.sol:NFTDescriptor",
-     constructorArguments: [],
-   });
-
     await hre.run("verify:verify", {
       address: contractAddresses.NonfungibleTokenPositionDescriptor,
       contract:
