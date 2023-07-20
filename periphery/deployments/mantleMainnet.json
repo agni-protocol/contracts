@@ -1,10 +1,10 @@
 {
   "WMNT": "0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8",
-  "SwapRouter": "0x0BC31D78e06ef928658e0B6AB50460552f3D91c4",
-  "QuoterV2": "0x882a2c07Bf04DEcCA36Be060B07d8BC0EE50D2Ff",
-  "TickLens": "0x8e8a453Bc0d968bBb284766aa4fE018a367E3106",
-  "NFTDescriptor": "0x6d7C6271fb6EDa99536D9Ea31762e93843Af6303",
-  "NonfungibleTokenPositionDescriptor": "0xF3FaF04d1FeF0bce0a3cCD7a817810B9071fDa36",
-  "NonfungiblePositionManager": "0x9Cecf546DC36A2DaA5eC7375C3cF35FEd1ADD7a2",
-  "AgniInterfaceMulticall": "0xb04a19EF7853c52EDe6FBb28F8FfBecb73329eD7"
+  "SwapRouter": "0x8cf5bCBcFaf22C6d48cC321fda4A90089DD23dB5",
+  "QuoterV2": "0x8684E81B44602E6edC88783Ee3e40e05f0626eCc",
+  "TickLens": "0x33cadc27aa972ff1efF9763EF1E74C22d967f8F9",
+  "NFTDescriptor": "0x8C2a1852634C3fCED498a035b15BB1f2D1ffB975",
+  "NonfungibleTokenPositionDescriptor": "0x3Eb6E0AE3cd8848f4e90047E2bB17B98722401Ab",
+  "NonfungiblePositionManager": "0xf0ab070FDcFE7eF171f82d0b15e1bEa577B0DaF2",
+  "AgniInterfaceMulticall": "0x7baa287aA8ceAb3E95470349c28f99F19e9f21A6"
 }
