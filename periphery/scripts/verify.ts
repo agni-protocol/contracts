@@ -5,16 +5,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-   const networkName = await network.name;
-   console.log("Network name=", networkName);
-
-    let WMNT = "";
-    if (networkName == "mantleMainnet") {
-      WMNT = "0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8";
-    } else {
-      WMNT = "0xEa12Be2389c2254bAaD383c6eD1fa1e15202b52A";
-    }
-    console.log("WMNT addresses:", WMNT);
+  const networkName = await network.name;
+  console.log("Network name=", networkName);
 
   let coreContractAddresses = utils.getContractAddresses(
     networkName,
@@ -22,19 +14,26 @@ async function main() {
   );
   console.log("core contract addresses:", coreContractAddresses);
 
-  let contractAddresses = utils.getContractAddresses(networkName,"");
+  let contractAddresses = utils.getContractAddresses(networkName, "");
   console.log("periphery contract addresses:", contractAddresses);
+
+  let WMNT = contractAddresses.WMNT;
+
+  // await hre.run("verify:verify", {
+  //   address: contractAddresses.QuoterV2,
+  //   contract: "contracts/lens/QuoterV2.sol:QuoterV2",
+  //   constructorArguments: [coreContractAddresses.AgniPoolDeployer, coreContractAddresses.AgniFactory, WMNT],
+  // });
+  // return
 
   await hre.run("verify:verify", {
     address: contractAddresses.SwapRouter,
     contract: "contracts/SwapRouter.sol:SwapRouter",
-    constructorArguments: [coreContractAddresses.AgniPoolDeployer, coreContractAddresses.AgniFactory, WMNT],
-  });
-
-  await hre.run("verify:verify", {
-    address: contractAddresses.QuoterV2,
-    contract: "contracts/lens/QuoterV2.sol:QuoterV2",
-    constructorArguments: [coreContractAddresses.AgniPoolDeployer, coreContractAddresses.AgniFactory, WMNT],
+    constructorArguments: [
+      coreContractAddresses.AgniPoolDeployer,
+      coreContractAddresses.AgniFactory,
+      WMNT,
+    ],
   });
 
   await hre.run("verify:verify", {
@@ -59,7 +58,7 @@ async function main() {
     address: contractAddresses.NonfungibleTokenPositionDescriptor,
     contract:
       "contracts/NonfungibleTokenPositionDescriptorOffChain.sol:NonfungibleTokenPositionDescriptorOffChain",
-    constructorArguments: [process.env.TOKEN_URI],
+    constructorArguments: [],
   });
 }
 
