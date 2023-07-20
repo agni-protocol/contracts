@@ -73,7 +73,7 @@ contract NonfungiblePositionManager is
         address _factory,
         address _WMNT,
         address _tokenDescriptor_
-    ) ERC721Permit('Agni Positions NFT-V1', 'MAG-V3-POS', '1') PeripheryImmutableState(_deployer, _factory, _WMNT) {
+    ) ERC721Permit('Agni Positions NFT-V1', 'AGNI-V3-POS', '1') PeripheryImmutableState(_deployer, _factory, _WMNT) {
         _tokenDescriptor = _tokenDescriptor_;
     }
 
