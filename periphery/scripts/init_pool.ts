@@ -22,13 +22,12 @@ async function main() {
   let token1 = usdcAddress > wmntAddress ? usdcAddress : wmntAddress;
   console.log("token0:", token0);
   console.log("token1:", token1);
-  return
 
   let initPoolTx = await positionManager.createAndInitializePoolIfNecessary(
     wmntAddress < usdcAddress ? wmntAddress : usdcAddress,
     usdcAddress > wmntAddress ? usdcAddress : wmntAddress,
     500,
-    ethers.BigNumber.from("2").pow(96)
+    ethers.BigNumber.from("2")
   );
   console.log("initPoolTx pool success:", initPoolTx.hash);
 }
