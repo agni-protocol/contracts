@@ -43,5 +43,10 @@
     "hardhat": "^2.14.0",
     "hardhat-contract-sizer": "^2.6.1",
     "hardhat-gas-reporter": "^1.0.9"
+  },
+  "dependencies": {
+    "bignumber": "^1.1.0",
+    "bignumber.js": "^9.1.1",
+    "decimal.js": "^10.4.3"
   }
 }

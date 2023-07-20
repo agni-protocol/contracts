@@ -1,17 +1,32 @@
 import { ethers,network } from "hardhat";
 const utils = require("../../common/utils");
+const {encodePriceSqrt} = require("../test/shared/encodePriceSqrt");
+const {formatSqrtRatioX96 } = require("../test/shared/formatSqrtRatioX96");
 
 let wmntAddress = "";
-// const usdcAddress = "0x82A2eb46a64e4908bBC403854bc8AA699bF058E9"; // testnet
-const usdcAddress = "0x201eba5cc46d216ce6dc03f6a759e8e766e956ae"; // mainnet
+const usdcAddress = "0x74a0E7118480bdfF5f812c7a879a41db09ac2c39"; // testnet
+// const usdcAddress = "0x201eba5cc46d216ce6dc03f6a759e8e766e956ae"; // mainnet
 
 async function main() {
   const networkName = await network.name;
   console.log("Network name=", networkName);
 
-  let contractAddresses = utils.getContractAddresses(networkName,"");
+  let coreContractAddresses = utils.getContractAddresses(
+    networkName,
+    `../core/deployments/${networkName}.json`
+  );
+  console.log("core contract addresses:", coreContractAddresses);
+
+  let contractAddresses = utils.getContractAddresses(networkName, "");
   console.log("contractAddresses:", contractAddresses);
   wmntAddress = contractAddresses.WMNT;
+
+  // MAMA/WMNT = 2
+  let price = encodePriceSqrt(2, 1); 
+  console.log("sqrtPrice:", price);
+
+  let priceStr = formatSqrtRatioX96(price);
+  console.log("priceStr:", priceStr);
 
   const positionManager = await ethers.getContractAt(
     "NonfungiblePositionManager",
@@ -27,7 +42,7 @@ async function main() {
     wmntAddress < usdcAddress ? wmntAddress : usdcAddress,
     usdcAddress > wmntAddress ? usdcAddress : wmntAddress,
     500,
-    ethers.BigNumber.from("2")
+    price
   );
   console.log("initPoolTx pool success:", initPoolTx.hash);
 }
