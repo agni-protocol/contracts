@@ -19,6 +19,12 @@ async function main() {
 
   let WMNT = contractAddresses.WMNT;
 
+  await hre.run("verify:verify", {
+    address: contractAddresses.Quoter,
+    contract: "contracts/lens/Quoter.sol:Quoter",
+    constructorArguments: [coreContractAddresses.AgniPoolDeployer, coreContractAddresses.AgniFactory, WMNT],
+  });
+
   // await hre.run("verify:verify", {
   //   address: contractAddresses.QuoterV2,
   //   contract: "contracts/lens/QuoterV2.sol:QuoterV2",

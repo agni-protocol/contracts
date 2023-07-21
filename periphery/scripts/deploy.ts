@@ -21,6 +21,14 @@ async function main() {
   }
   console.log("WMNT addresses:", WMNT);
 
+  const Quoter = await ethers.getContractFactory("Quoter");
+  const quoter = await Quoter.deploy(
+    coreContractAddresses.AgniPoolDeployer,
+    coreContractAddresses.AgniFactory,
+    WMNT
+  );
+  console.log("Quoter", quoter.address);
+
   const Multicall = await ethers.getContractFactory("AgniInterfaceMulticall");
   const multicall = await Multicall.deploy();
   console.log("Multicall", multicall.address);
@@ -72,6 +80,7 @@ async function main() {
   let contractAddresses = {
     WMNT: WMNT,
     SwapRouter: swapRouter.address,
+    Quoter: quoter.address,
     QuoterV2: quoterV2.address,
     TickLens: tickLens.address,
     NFTDescriptor: nftDescriptor.address,

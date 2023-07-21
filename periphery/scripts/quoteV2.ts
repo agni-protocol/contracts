@@ -1,8 +1,8 @@
 import { ethers,network } from "hardhat";
-const utils = require("../common/utils");
+const utils = require("../../common/utils");
 import { encodePath } from "../test/shared/path";
 
-const agniAddress = "0x74a0E7118480bdfF5f812c7a879a41db09ac2c39";
+const agniAddress = "0x201eba5cc46d216ce6dc03f6a759e8e766e956ae";
 
 enum FeeAmount {
   LOW = 500,
@@ -20,7 +20,7 @@ async function main() {
 
     const QuoterV2 = await ethers.getContractAt(
       "QuoterV2",
-      "0xb0a16B90D8a35AA859B058B869364A3758Ba4D14"
+      contractAddresses.QuoterV2
     );
     console.log("QuoterV2:", contractAddresses.QuoterV2);
 
