@@ -54,6 +54,7 @@ contract IdoPool is IIdoPool, Initializable {
     mapping(address => UserIDO) private _userIdoMap;
     bool private _unlockedFromInsurance;
     bool private _lastTotalValuesUpdated;
+    bool public scam; // Is the project a scam?
     
     uint256 private _withdrawnByfundraiser; // The amount of funds raised that has been withdrawn.
     uint256 private _sellingTokenExp; // 10 ** sellingTokenDecimals
@@ -377,7 +378,7 @@ contract IdoPool is IIdoPool, Initializable {
 
     // Callback from the insurance pool contract, when the pool's funds are not sufficient to pay out, 
     // the lacking funds are transferred from current pool to insurance pool.
-    function callbackFromInsurance(uint256 transferAmount) external override {
+    function callbackFromInsurance(uint256 transferAmount, bool _scam) external override {
         require(!_unlockedFromInsurance,"already callback by insurance");
         require(msg.sender == insurancePool, "forbidden");
         require(transferAmount <= totalLockByInsurance, "too much transferAmount");
@@ -385,10 +386,18 @@ contract IdoPool is IIdoPool, Initializable {
         if (transferAmount >0) {
             TransferHelper.safeTransfer(raisingToken, insurancePool, transferAmount);
         }
+        emit CallbackFromInsurance(address(this),transferAmount);
 
         _unlockedFromInsurance = true;
         deductedByInsurance += transferAmount;
-        emit CallbackFromInsurance(transferAmount);
+        scam = _scam;
+
+        // If the project is scam, the remaining locked funds need to be put into the insurance pool
+        if (scam){
+            uint256 leftLockByInsurance = totalLockByInsurance - transferAmount;
+            TransferHelper.safeTransfer(raisingToken, insurancePool, leftLockByInsurance);
+            emit CallbackFromInsuranceScam(address(this), leftLockByInsurance);
+        }
     }
 
 
@@ -400,8 +409,8 @@ contract IdoPool is IIdoPool, Initializable {
         _updateLastTotalValues();
 
         uint256 withdrawable = totalRaised;
-        // After receiving the callback from the insurance pool, only the locked portion of the insurance can be withdrawn.
-        if (!_unlockedFromInsurance) {
+        // After receiving the callback from the insurance pool, if the project party is not scam, it can only withdraw the locked part of the insurance.
+        if (!_unlockedFromInsurance && !scam) {
             withdrawable -= totalLockByInsurance;
         } else {
             withdrawable -= deductedByInsurance;

@@ -16,7 +16,8 @@ interface IIdoPool {
     event UserEnrolled(address user);
     event PresaleDeposited(address indexed user, uint256 buyQuota, bool buyInsurance);
     event PublicSaleDeposited(address indexed user, uint256 buyQuota, uint256 extraDeposit, bool buyInsurance);
-    event CallbackFromInsurance(uint256 transferAmount);
+    event CallbackFromInsurance(address indexed pool, uint256 transferAmount);
+    event CallbackFromInsuranceScam(address indexed pool, uint256 leftAmount);
     event Claimed(address indexed user, uint256 claimedAmount, uint256 refund);
 
     function factory() external view returns (address); // Returns the address of the ido factory.
@@ -86,5 +87,5 @@ interface IIdoPool {
     function claim() external;
     function withdrawRaisingToken() external;
     function withdrawLeftQuotas() external;
-    function callbackFromInsurance(uint256 transferAmount) external;
+    function callbackFromInsurance(uint256 transferAmount, bool scam) external;
 }

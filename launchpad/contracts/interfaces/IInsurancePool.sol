@@ -49,6 +49,6 @@ interface IInsurancePool {
 
     function registerIdoPool(address idoPool) external;
     function insure(address user, uint256 buyQuota, uint256 price, bool isPresale) external returns (uint256 insuranceId);
-    function setAvgPrice(address pool, uint256 price) external;
+    function setAvgPrice(address pool, uint256 price, bool scam) external;
     function claimLoss(uint256 insuranceId) external;
 }
