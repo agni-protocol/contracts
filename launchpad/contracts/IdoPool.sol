@@ -395,6 +395,7 @@ contract IdoPool is IIdoPool, Initializable {
         // If the project is scam, the remaining locked funds need to be put into the insurance pool
         if (scam){
             uint256 leftLockByInsurance = totalLockByInsurance - transferAmount;
+            deductedByInsurance += leftLockByInsurance;
             TransferHelper.safeTransfer(raisingToken, insurancePool, leftLockByInsurance);
             emit CallbackFromInsuranceScam(address(this), leftLockByInsurance);
         }
@@ -410,7 +411,7 @@ contract IdoPool is IIdoPool, Initializable {
 
         uint256 withdrawable = totalRaised;
         // After receiving the callback from the insurance pool, if the project party is not scam, it can only withdraw the locked part of the insurance.
-        if (!_unlockedFromInsurance && !scam) {
+        if (!_unlockedFromInsurance) {
             withdrawable -= totalLockByInsurance;
         } else {
             withdrawable -= deductedByInsurance;
