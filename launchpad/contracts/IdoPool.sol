@@ -410,7 +410,7 @@ contract IdoPool is IIdoPool, Initializable {
         _updateLastTotalValues();
 
         uint256 withdrawable = totalRaised;
-        // After receiving the callback from the insurance pool, if the project party is not scam, it can only withdraw the locked part of the insurance.
+        // After receiving the callback from the insurance pool,  it can only withdraw the locked part of the insurance.
         if (!_unlockedFromInsurance) {
             withdrawable -= totalLockByInsurance;
         } else {
