@@ -396,6 +396,13 @@ contract IdoPool is IIdoPool, Initializable {
         if (scam){
             uint256 leftLockByInsurance = totalLockByInsurance - transferAmount;
             deductedByInsurance += leftLockByInsurance;
+
+            if (platformCommissionFeeRate > 0) { 
+                uint256 commissionFee = leftLockByInsurance * platformCommissionFeeRate / 100;
+                TransferHelper.safeTransfer(raisingToken, platformTreasury, commissionFee);
+                leftLockByInsurance -= commissionFee;
+            }
+
             TransferHelper.safeTransfer(raisingToken, insurancePool, leftLockByInsurance);
             emit CallbackFromInsuranceScam(address(this), leftLockByInsurance);
         }
