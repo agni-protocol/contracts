@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 import "@chainlink/contracts/src/v0.8/KeeperCompatible.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../interfaces/IMasterChefV3.sol";
-import "../interfaces/IMasterChefV2.sol";
 import "../interfaces/IReceiver.sol";
 
 /**
