@@ -22,10 +22,10 @@ async function main() {
     contractAddresses.ScoreCalculator.Proxy
   );
 
-  let scoreMama = await scoreCalculator.agniToken();
-  console.log("score agni token:", scoreMama);
+  let scoreAgni = await scoreCalculator.agniToken();
+  console.log("score agni token:", scoreAgni);
 
-  if (scoreMama == "0x0000000000000000000000000000000000000000"){
+  if (scoreAgni == "0x0000000000000000000000000000000000000000"){
     let setAgniTokenTx = await scoreCalculator.setAgniToken(AGNI);
     console.log("setAgniTokenTx :", setAgniTokenTx.hash);
   }

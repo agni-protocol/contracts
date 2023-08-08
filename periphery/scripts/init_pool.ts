@@ -21,7 +21,7 @@ async function main() {
   console.log("contractAddresses:", contractAddresses);
   wmntAddress = contractAddresses.WMNT;
 
-  // MAMA/WMNT = 2
+  // Agni/WMNT = 2
   let price = encodePriceSqrt(2, 1); 
   console.log("sqrtPrice:", price);
 

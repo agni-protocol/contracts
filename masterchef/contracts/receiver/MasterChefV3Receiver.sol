@@ -9,7 +9,7 @@ import "../interfaces/IMasterChefV3.sol";
 contract MasterChefV3Receiver is Ownable {
     using SafeERC20 for IERC20;
 
-    IERC20 public immutable Mama;
+    IERC20 public immutable Agni;
     IMasterChefV3 public immutable MasterChefV3;
 
     address public operatorAddress;
@@ -29,12 +29,12 @@ contract MasterChefV3Receiver is Ownable {
 
     /// @notice Constructor.
     /// @param _v3 MasterChef V3 address.
-    /// @param _agni Mama token address.
+    /// @param _agni Agni token address.
     constructor(IMasterChefV3 _v3, IERC20 _agni) {
         MasterChefV3 = _v3;
-        Mama = _agni;
+        Agni = _agni;
 
-        Mama.safeApprove(address(_v3), type(uint256).max);
+        Agni.safeApprove(address(_v3), type(uint256).max);
     }
 
     /// @notice upkeep.
@@ -44,7 +44,7 @@ contract MasterChefV3Receiver is Ownable {
     /// @param _withUpdate Whether call "massUpdatePools" operation.
     function upkeep(uint256 _amount, uint256 _duration, bool _withUpdate) external onlyOwnerOrOperator {
         uint256 amount = _amount;
-        uint256 balance = Mama.balanceOf(address(this));
+        uint256 balance = Agni.balanceOf(address(this));
         if (_amount == 0 || _amount > balance) {
             amount = balance;
         }

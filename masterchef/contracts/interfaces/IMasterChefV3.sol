@@ -7,4 +7,6 @@ interface IMasterChefV3 {
     function latestPeriodStartTime() external view returns (uint256);
 
     function upkeep(uint256 amount, uint256 duration, bool withUpdate) external;
+
+    function getPoolByTokenId(uint256 _tokenId) external view returns (address);
 }

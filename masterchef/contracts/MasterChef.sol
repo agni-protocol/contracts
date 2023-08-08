@@ -86,7 +86,7 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
     uint256 public latestPeriodNumber;
     uint256 public latestPeriodStartTime;
     uint256 public latestPeriodEndTime;
-    uint256 public latestPeriodMamaPerSecond;
+    uint256 public latestPeriodAgniPerSecond;
 
     /// @notice Address of the operator.
     address public operatorAddress;
@@ -156,7 +156,7 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
         uint256 indexed periodNumber,
         uint256 oldEndTime,
         uint256 newEndTime,
-        uint256 remainingMama
+        uint256 remainingAgni
     );
     event UpdateFarmBoostContract(address indexed farmBoostContract);
     event SetEmergency(bool emergency);
@@ -194,33 +194,45 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
 
     /// @notice Returns the agni per second , period end time.
     /// @param _pid The pool pid.
-    /// @return agniPerSecond Mama reward per second.
+    /// @return agniPerSecond Agni reward per second.
     /// @return endTime Period end time.
     function getLatestPeriodInfoByPid(uint256 _pid) public view returns (uint256 agniPerSecond, uint256 endTime) {
         if (totalAllocPoint > 0) {
-            agniPerSecond = (latestPeriodMamaPerSecond * poolInfo[_pid].allocPoint) / totalAllocPoint;
+            agniPerSecond = (latestPeriodAgniPerSecond * poolInfo[_pid].allocPoint) / totalAllocPoint;
         }
         endTime = latestPeriodEndTime;
     }
 
     /// @notice Returns the agni per second , period end time. This is for liquidity mining pool.
     /// @param _pool Address of the V3 pool.
-    /// @return agniPerSecond Mama reward per second.
+    /// @return agniPerSecond Agni reward per second.
     /// @return endTime Period end time.
     function getLatestPeriodInfo(address _pool) public view returns (uint256 agniPerSecond, uint256 endTime) {
         if (totalAllocPoint > 0) {
             agniPerSecond =
-                (latestPeriodMamaPerSecond * poolInfo[poolAddressPid[_pool]].allocPoint) /
+                (latestPeriodAgniPerSecond * poolInfo[poolAddressPid[_pool]].allocPoint) /
                 totalAllocPoint;
         }
         endTime = latestPeriodEndTime;
+    }
+
+    /// @notice Returns the agni pool address.
+    /// @param _tokenId Token Id of NFT.
+    function getPoolByTokenId(uint256 _tokenId) external view returns (address) {
+        UserPositionInfo memory positionInfo = userPositionInfos[_tokenId];
+        if (positionInfo.pid != 0) {
+            PoolInfo memory pool = poolInfo[positionInfo.pid];
+            return address(pool.pool);
+        }
+
+        return address(0);
     }
 
     /// @notice View function for checking pending AGNI rewards.
     /// @dev The pending agni amount is based on the last state in LMPool. The actual amount will happen whenever liquidity changes or harvest.
     /// @param _tokenId Token Id of NFT.
     /// @return reward Pending reward.
-    function pendingMama(uint256 _tokenId) external view returns (uint256 reward) {
+    function pendingAgni(uint256 _tokenId) external view returns (uint256 reward) {
         UserPositionInfo memory positionInfo = userPositionInfos[_tokenId];
         if (positionInfo.pid != 0) {
             PoolInfo memory pool = poolInfo[positionInfo.pid];
@@ -377,7 +389,7 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
     /// @notice harvest agni from pool.
     /// @param _tokenId Token Id of NFT.
     /// @param _to Address to.
-    /// @return reward Mama reward.
+    /// @return reward Agni reward.
     function harvest(uint256 _tokenId, address _to) external nonReentrant returns (uint256 reward) {
         UserPositionInfo storage positionInfo = userPositionInfos[_tokenId];
         if (positionInfo.user != msg.sender) revert NotOwner();
@@ -419,7 +431,7 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
     /// @notice Withdraw LP tokens from pool.
     /// @param _tokenId Token Id of NFT to deposit.
     /// @param _to Address to which NFT token to withdraw.
-    /// @return reward Mama reward.
+    /// @return reward Agni reward.
     function withdraw(uint256 _tokenId, address _to) external nonReentrant returns (uint256 reward) {
         if (_to == address(this) || _to == address(0)) revert WrongReceiver();
         UserPositionInfo storage positionInfo = userPositionInfos[_tokenId];
@@ -731,16 +743,16 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
         uint256 agniPerSecond;
         uint256 agniAmount = _amount;
         if (latestPeriodEndTime > currentTime) {
-            uint256 remainingMama = ((latestPeriodEndTime - currentTime) * latestPeriodMamaPerSecond) / PRECISION;
-            emit UpdateUpkeepPeriod(latestPeriodNumber, latestPeriodEndTime, currentTime, remainingMama);
-            agniAmount += remainingMama;
+            uint256 remainingAgni = ((latestPeriodEndTime - currentTime) * latestPeriodAgniPerSecond) / PRECISION;
+            emit UpdateUpkeepPeriod(latestPeriodNumber, latestPeriodEndTime, currentTime, remainingAgni);
+            agniAmount += remainingAgni;
         }
         agniPerSecond = (agniAmount * PRECISION) / duration;
         unchecked {
             latestPeriodNumber++;
             latestPeriodStartTime = currentTime + 1;
             latestPeriodEndTime = endTime;
-            latestPeriodMamaPerSecond = agniPerSecond;
+            latestPeriodAgniPerSecond = agniPerSecond;
         }
         emit NewUpkeepPeriod(latestPeriodNumber, currentTime + 1, endTime, agniPerSecond, agniAmount);
     }
