@@ -173,7 +173,9 @@ contract ExtraIncentivePool is Ownable, ReentrancyGuard {
         require(_to != address(0),"invalid to address");
         reward = this.pendingIncentiveToken(_tokenId);
         if (reward > 0){
-            positionInfos[_tokenId].lastRewardTimestamp = block.timestamp;
+            // set lastRewardTimestamp
+            PositionInfo storage positon = positionInfos[_tokenId];
+            positon.lastRewardTimestamp = block.timestamp;
 
             _safeTransfer(_to, reward);
             emit Harvest(msg.sender, _to, _tokenId, reward);
