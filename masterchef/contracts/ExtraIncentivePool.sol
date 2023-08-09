@@ -19,10 +19,14 @@ contract ExtraIncentivePool is Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
     using SafeCast for uint256;
 
-     struct PoolInfo {
+    struct PoolInfo {
         uint256 allocPoint;
         // V3 pool address
         IAgniPool pool;
+    }
+
+    struct PositionInfo {
+       uint256 lastRewardTimestamp;
     }
 
     /// @notice Address of incentive token.
@@ -36,8 +40,7 @@ contract ExtraIncentivePool is Ownable, ReentrancyGuard {
 
     /// @notice Info of each MCV3 pool.
     mapping(address => PoolInfo) public poolInfos;
-    // mapping(uint256 => PositonInfo) public positionInfos;
-
+    mapping(uint256 => PositionInfo) public positionInfos;
 
     /// @notice Total allocation points. Must be the sum of all pools' allocation points.
     uint256 public totalAllocPoint;
@@ -140,6 +143,10 @@ contract ExtraIncentivePool is Ownable, ReentrancyGuard {
         uint256 endTimestamp = latestPeriodEndTime;
         uint256 positionLastRewardTimestamp = masterChef.getLastRewardTimeTimeByTokenId(_tokenId);
 
+        if (positionInfos[_tokenId].lastRewardTimestamp > positionLastRewardTimestamp){
+            return 0;
+        }
+
         if (positionLiquidity > 0){
             address _pool = masterChef.getPoolByTokenId(_tokenId);
             PoolInfo storage pool = poolInfos[_pool];
@@ -166,11 +173,12 @@ contract ExtraIncentivePool is Ownable, ReentrancyGuard {
         require(_to != address(0),"invalid to address");
         reward = this.pendingIncentiveToken(_tokenId);
         if (reward > 0){
+            positionInfos[_tokenId].lastRewardTimestamp = block.timestamp;
+
             _safeTransfer(_to, reward);
             emit Harvest(msg.sender, _to, _tokenId, reward);
         }
     }
-
 
     /// @notice Upkeep period.
     /// @param _amount The amount of incentive token injected.
