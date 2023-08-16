@@ -1,7 +1,7 @@
 import { ethers,network } from "hardhat";
 const utils = require("../../common/utils");
 
-const LpAddress = "0xAbb213151ee053180348d9423F7F8dAf24F46F02";
+const LpAddress = "0xf9a8ea5d7d73b284853bcbba1e163c615ba47b2b";  // MAMA / WMNT 1%
 
 async function main() {
   const networkName = await network.name;
@@ -19,7 +19,15 @@ async function main() {
   console.log("master chef lm deploy:", LMPoolDeployer);
 
   let addPoolTx = await masterChef.add(10000, LpAddress, true);
-  console.log("add pool tx: ", addPoolTx.hash);
+  console.log("master chef add pool tx: ", addPoolTx.hash);
+
+  // add incentive pool
+  const IncentivePool = await ethers.getContractFactory("ExtraIncentivePool");
+  const incentivePool = await IncentivePool.attach(
+    contractAddresses.ExtraIncentivePool
+  );
+  addPoolTx = await incentivePool.add(LpAddress,10000);
+  console.log("incentive add pool tx: ", addPoolTx.hash);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
