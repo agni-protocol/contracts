@@ -10,12 +10,10 @@ import "./interfaces/IAgniPool.sol";
 import "./interfaces/ILMPool.sol";
 import "./interfaces/ILMPoolDeployer.sol";
 import "./interfaces/IMasterChefV3.sol";
-import "./interfaces/IFarmBooster.sol";
 import "./interfaces/IWMNT.sol";
 import "./utils/Multicall.sol";
-import "./Enumerable.sol";
 
-contract ExtraIncentivePool is Ownable, ReentrancyGuard {
+contract ExtraIncentivePool is Ownable,Multicall, ReentrancyGuard {
     using SafeERC20 for IERC20;
     using SafeCast for uint256;
 
@@ -164,21 +162,19 @@ contract ExtraIncentivePool is Ownable, ReentrancyGuard {
         }
     }
 
-
     /// @notice harvest incentive token from pool.
     /// @param _tokenId Token Id of NFT.
-    /// @param _to Address to.
     /// @return reward incentive token reward.
-    function harvest(uint256 _tokenId, address _to) external nonReentrant returns (uint256 reward) {
-        require(_to != address(0),"invalid to address");
+    function harvest(uint256 _tokenId) external nonReentrant returns (uint256 reward) {
+        address tokenOwner = masterChef.getOwnerByTokenId(_tokenId);
         reward = this.pendingIncentiveToken(_tokenId);
         if (reward > 0){
             // set lastRewardTimestamp
             PositionInfo storage positon = positionInfos[_tokenId];
             positon.lastRewardTimestamp = block.timestamp;
 
-            _safeTransfer(_to, reward);
-            emit Harvest(msg.sender, _to, _tokenId, reward);
+            _safeTransfer(tokenOwner, reward);
+            emit Harvest(msg.sender, tokenOwner, _tokenId, reward);
         }
     }
 

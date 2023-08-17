@@ -229,6 +229,13 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
         return address(0);
     }
 
+    /// @notice Returns the NFT owner address.
+    /// @param _tokenId Token Id of NFT.
+    function getOwnerByTokenId(uint256 _tokenId) external view returns (address) {
+        UserPositionInfo memory positionInfo = userPositionInfos[_tokenId];
+        return positionInfo.user;
+    }
+
     /// @notice Returns the stake start time.
     /// @param _tokenId Token Id of NFT.
     function getLastRewardTimeTimeByTokenId(uint256 _tokenId) external view returns (uint32) {
@@ -407,15 +414,21 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
         return this.onERC721Received.selector;
     }
 
+    // function harvest(uint256 _tokenId, address _to) external nonReentrant returns (uint256 reward) {
+    //     UserPositionInfo storage positionInfo = userPositionInfos[_tokenId];
+    //     if (positionInfo.user != msg.sender) revert NotOwner();
+    //     if (positionInfo.liquidity == 0 && positionInfo.reward == 0) revert NoLiquidity();
+    //     reward = harvestOperation(positionInfo, _tokenId, _to);
+    // }
+
     /// @notice harvest agni from pool.
     /// @param _tokenId Token Id of NFT.
-    /// @param _to Address to.
     /// @return reward Agni reward.
-    function harvest(uint256 _tokenId, address _to) external nonReentrant returns (uint256 reward) {
+    function harvest(uint256 _tokenId) external nonReentrant returns (uint256 reward) {
         UserPositionInfo storage positionInfo = userPositionInfos[_tokenId];
-        if (positionInfo.user != msg.sender) revert NotOwner();
+        // if (positionInfo.user != msg.sender) revert NotOwner();
         if (positionInfo.liquidity == 0 && positionInfo.reward == 0) revert NoLiquidity();
-        reward = harvestOperation(positionInfo, _tokenId, _to);
+        reward = harvestOperation(positionInfo, _tokenId, positionInfo.user);
     }
 
     function harvestOperation(

@@ -9,6 +9,8 @@ interface IMasterChefV3 {
     function upkeep(uint256 amount, uint256 duration, bool withUpdate) external;
 
     function getPoolByTokenId(uint256 _tokenId) external view returns (address);
+    
+    function getOwnerByTokenId(uint256 _tokenId) external view returns (address);
 
     function getLiquidityByTokenId(uint256 _tokenId) external view returns (uint256 , uint256 );
 
