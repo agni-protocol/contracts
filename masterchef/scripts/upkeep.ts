@@ -14,7 +14,7 @@ async function main() {
   );
 
   let upkeepTx = await masterChefRecevier.upkeep(
-    "20000000000000000000", // 20 WMNT
+    "100000000000000000000", // 100 WMNT
     86400 * 30,
     true
   );
