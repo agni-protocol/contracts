@@ -15,4 +15,6 @@ interface IMasterChefV3 {
     function getLiquidityByTokenId(uint256 _tokenId) external view returns (uint256 , uint256 );
 
     function getLastRewardTimeTimeByTokenId(uint256 _tokenId) external view returns (uint32);
+
+    function getPositionTickByTokenId(uint256 _tokenId) external view returns (int24, int24 );
 }

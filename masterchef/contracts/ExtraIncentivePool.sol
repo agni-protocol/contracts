@@ -7,10 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "./libraries/SafeCast.sol";
 import "./interfaces/IAgniPool.sol";
-import "./interfaces/ILMPool.sol";
-import "./interfaces/ILMPoolDeployer.sol";
 import "./interfaces/IMasterChefV3.sol";
-import "./interfaces/IWMNT.sol";
 import "./utils/Multicall.sol";
 
 contract ExtraIncentivePool is Ownable,Multicall, ReentrancyGuard {
@@ -147,7 +144,14 @@ contract ExtraIncentivePool is Ownable,Multicall, ReentrancyGuard {
 
         if (positionLiquidity > 0){
             address _pool = masterChef.getPoolByTokenId(_tokenId);
-            PoolInfo storage pool = poolInfos[_pool];
+            PoolInfo storage poolInfo = poolInfos[_pool];
+
+            (int24 tickLower, int24 tickUpper) =  masterChef.getPositionTickByTokenId(_tokenId);
+            (, int24 tickCurrent, , , , ,) = poolInfo.pool.slot0();
+            if (tickCurrent < tickLower || tickCurrent >= tickUpper){
+                // position out of range
+                return 0;
+            }
 
             uint256 duration;
             if (endTimestamp > currTimestamp) {
@@ -157,7 +161,7 @@ contract ExtraIncentivePool is Ownable,Multicall, ReentrancyGuard {
             }
 
            uint256 shouldReward =  duration * latestPeriodIncentiveTokenPerSecond / PRECISION;
-           uint256 pointReward = shouldReward * pool.allocPoint / totalAllocPoint;
+           uint256 pointReward = shouldReward * poolInfo.allocPoint / totalAllocPoint;
            reward = pointReward * positionLiquidity / poolLiquidity;
         }
     }
@@ -240,5 +244,10 @@ contract ExtraIncentivePool is Ownable,Multicall, ReentrancyGuard {
             }
             incentiveToken.safeTransfer(_to, _amount);
         }
+    }
+
+
+    function isPositionOutOfRange() internal returns (bool){
+
     }
 }

@@ -254,6 +254,13 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
         }
     }
 
+    /// @notice Returns the tick.
+    /// @param _tokenId Token Id of NFT.
+    function getPositionTickByTokenId(uint256 _tokenId) external view returns (int24 tickLower, int24 tickUpper) {
+        UserPositionInfo memory positionInfo = userPositionInfos[_tokenId];
+        return (positionInfo.tickLower,positionInfo.tickUpper);
+    }
+
 
     /// @notice View function for checking pending AGNI rewards.
     /// @dev The pending agni amount is based on the last state in LMPool. The actual amount will happen whenever liquidity changes or harvest.
