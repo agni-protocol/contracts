@@ -21,10 +21,10 @@ contract FarmBooster is Ownable {
     /// @notice Initialize the totalLockedAmount.
     bool initialization;
 
-    /// @notice Agni Pool total locked cake amount.
+    /// @notice Agni Pool total locked agni amount.
     uint256 public totalLockedAmount;
 
-    /// @notice The latest total locked cake amount In AgniPool
+    /// @notice The latest total locked agni amount In AgniPool
     uint256 latestTotalLockedAmountInAgniPool;
 
     struct UserLockedInfo {
@@ -32,7 +32,7 @@ contract FarmBooster is Ownable {
         uint256 lockedAmount;
     }
 
-    /// @notice Record user lockedAmount in cake pool
+    /// @notice Record user lockedAmount in agni pool
     mapping(address => UserLockedInfo) public userLockedInfos;
 
     /// @notice Maximum allowed boosted position numbers
@@ -97,25 +97,25 @@ contract FarmBooster is Ownable {
         uint256 maxLockDuration
     );
 
-    /// @param _cake AGNI token contract address.
-    /// @param _cakePool Agni Pool contract address.
+    /// @param _agni AGNI token contract address.
+    /// @param _agniPool Agni Pool contract address.
     /// @param _v3 MasterChefV3 contract address.
     /// @param _max Maximum allowed boosted farm quantity.
     /// @param _cA Limit max boost.
     /// @param _cB Controls difficulties.
-    constructor(address _cake, address _cakePool, IMasterChefV3 _v3, uint256 _max, uint256 _cA, uint256 _cB) {
+    constructor(address _agni, address _agniPool, IMasterChefV3 _v3, uint256 _max, uint256 _cA, uint256 _cB) {
         require(_max > 0 && _cA >= MIN_CA && _cA <= MAX_CA && _cB > MIN_CB && _cB <= MAX_CB, 'Invalid parameter');
-        AGNI = _cake;
-        AGNI_POOL = _cakePool;
+        AGNI = _agni;
+        AGNI_POOL = _agniPool;
         MASTER_CHEF_V3 = _v3;
         MAX_BOOST_POSITION = _max;
         cA = _cA;
         cB = _cB;
     }
 
-    /// @notice Checks if the msg.sender is the cake pool.
+    /// @notice Checks if the msg.sender is the agni pool.
     modifier onlyAgniPool() {
-        require(msg.sender == AGNI_POOL, 'Not cake pool');
+        require(msg.sender == AGNI_POOL, 'Not agni pool');
         _;
     }
 
@@ -184,12 +184,12 @@ contract FarmBooster is Ownable {
     }
 
     /// @notice Calculate totalLockedAmount and update UserLockedInfo.
-    /// @dev This is to fix the totalLockedAmount issue in cake pool.
+    /// @dev This is to fix the totalLockedAmount issue in agni pool.
     /// @param _user User address.
     function updateTotalLockedAmount(address _user) internal {
         uint256 totalLockedAmountInAgniPool = IAgniPool(AGNI_POOL).totalLockedAmount();
         if (!initialization) {
-            // Record the totalLockedAmount as the initial value after setting farm booster contract in cake pool.
+            // Record the totalLockedAmount as the initial value after setting farm booster contract in agni pool.
             initialization = true;
             totalLockedAmount = totalLockedAmountInAgniPool;
             latestTotalLockedAmountInAgniPool = totalLockedAmountInAgniPool;
@@ -200,11 +200,11 @@ contract FarmBooster is Ownable {
             lockedInfo.init = true;
             lockedInfo.lockedAmount = userLockedAmount;
 
-            // Deposit cake into cake pool.
+            // Deposit agni into agni pool.
             if (totalLockedAmountInAgniPool >= latestTotalLockedAmountInAgniPool) {
                 totalLockedAmount += totalLockedAmountInAgniPool - latestTotalLockedAmountInAgniPool;
             } else {
-                // Withdraw cake from cake pool.
+                // Withdraw agni from agni pool.
                 totalLockedAmount -= latestTotalLockedAmountInAgniPool - totalLockedAmountInAgniPool;
             }
         } else {
@@ -215,7 +215,7 @@ contract FarmBooster is Ownable {
     }
 
     /// @notice Update UserLockedInfo.
-    /// @dev This will update the userLockedAmount for the users who had already locked cake in cake pool.
+    /// @dev This will update the userLockedAmount for the users who had already locked agni in agni pool.
     /// @param _user User address.
     function updateUserLockedAmount(address _user) internal {
         UserLockedInfo storage lockedInfo = userLockedInfos[_user];
@@ -228,10 +228,10 @@ contract FarmBooster is Ownable {
 
     /// @notice Agnipool operation(deposit/withdraw) automatically call this function.
     /// @param _user User address.
-    /// @param _lockedAmount User locked amount in cake pool.
-    /// @param _lockedDuration User locked duration in cake pool.
-    /// @param _totalLockedAmount Total locked cake amount in cake pool.
-    /// @param _maxLockDuration Maximum locked duration in cake pool.
+    /// @param _lockedAmount User locked amount in agni pool.
+    /// @param _lockedDuration User locked duration in agni pool.
+    /// @param _totalLockedAmount Total locked agni amount in agni pool.
+    /// @param _maxLockDuration Maximum locked duration in agni pool.
     function onAgniPoolUpdate(
         address _user,
         uint256 _lockedAmount,
@@ -326,7 +326,7 @@ contract FarmBooster is Ownable {
     /// @param _user user address.
     /// @param _pid pool id.
     /// @param _tokenId token id.
-    /// @param _duration cake pool average locked duration.
+    /// @param _duration agni pool average locked duration.
     /// @param _liquidity position liquidity.
     function _updateBoostMultiplier(
         ItMap storage itmap,
@@ -435,7 +435,7 @@ contract FarmBooster is Ownable {
     /// @param _pid pool id(MasterchefV3 pool).
     function _getTotalLiquidity(uint256 _pid) internal view returns (uint256) {
         (, address v3Pool, , , , uint256 totalLiquidity, ) = MASTER_CHEF_V3.poolInfo(_pid);
-        uint256 v3PoolLiquidity = IPancakeV3Pool(v3Pool).liquidity();
+        uint256 v3PoolLiquidity = IPanagniV3Pool(v3Pool).liquidity();
         if (totalLiquidity > v3PoolLiquidity) {
             totalLiquidity = v3PoolLiquidity;
         }
@@ -444,7 +444,7 @@ contract FarmBooster is Ownable {
 
     /// @param _user user address.
     /// @param _pid pool id(MasterchefV3 pool).
-    /// @param _duration cake pool average locked duration.
+    /// @param _duration agni pool average locked duration.
     /// @param _liquidity position liquidity.
     function _boostCalculate(
         address _user,

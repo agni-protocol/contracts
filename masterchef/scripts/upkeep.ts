@@ -13,7 +13,7 @@ async function main() {
   );
 
   let upkeepTx = await masterChefRecevier.upkeep(
-    "100000000000000000000000",
+    "10000000000000000000000",  // 10000个rAgni
     86400 * 30,
     true
   );

@@ -242,13 +242,12 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
                     positionInfo.tickLower,
                     positionInfo.tickUpper
                 );
-                if (
-                    rewardGrowthInside > positionInfo.rewardGrowthInside &&
-                    MAX_U256 / (rewardGrowthInside - positionInfo.rewardGrowthInside) > positionInfo.boostLiquidity
-                )
-                    reward =
-                        ((rewardGrowthInside - positionInfo.rewardGrowthInside) * positionInfo.boostLiquidity) /
-                        Q128;
+
+                uint256 rewardGrowthInsideDelta;
+                unchecked {
+                    rewardGrowthInsideDelta = rewardGrowthInside - positionInfo.rewardGrowthInside;
+                }
+                reward = (rewardGrowthInsideDelta * positionInfo.boostLiquidity) / Q128;
             }
             reward += positionInfo.reward;
         }
@@ -397,6 +396,19 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
         reward = harvestOperation(positionInfo, _tokenId, _to);
     }
 
+    /// @notice harvestAll all agni from pool.
+    /// @param _tokenIds All token ids of NFT.
+    /// @param _to Address to.
+    /// @return reward Agni reward.
+    function harvestAll(uint256[] calldata _tokenIds, address _to) external nonReentrant returns (uint256 reward) {
+        for (uint8 index = 0; index < _tokenIds.length; index++) {
+            UserPositionInfo storage positionInfo = userPositionInfos[_tokenIds[index]];
+            if (positionInfo.user != msg.sender) revert NotOwner();
+            if (positionInfo.liquidity == 0 && positionInfo.reward == 0) revert NoLiquidity();
+            reward = harvestOperation(positionInfo, _tokenIds[index], _to);
+        }
+    }
+
     function harvestOperation(
         UserPositionInfo storage positionInfo,
         uint256 _tokenId,
@@ -408,11 +420,12 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
             // Update rewardGrowthInside
             LMPool.accumulateReward(uint32(block.timestamp));
             uint256 rewardGrowthInside = LMPool.getRewardGrowthInside(positionInfo.tickLower, positionInfo.tickUpper);
-            // Check overflow
-            if (
-                rewardGrowthInside > positionInfo.rewardGrowthInside &&
-                MAX_U256 / (rewardGrowthInside - positionInfo.rewardGrowthInside) > positionInfo.boostLiquidity
-            ) reward = ((rewardGrowthInside - positionInfo.rewardGrowthInside) * positionInfo.boostLiquidity) / Q128;
+
+            uint256 rewardGrowthInsideDelta;
+            unchecked {
+                rewardGrowthInsideDelta = rewardGrowthInside - positionInfo.rewardGrowthInside;
+            }
+            reward = (rewardGrowthInsideDelta * positionInfo.boostLiquidity) / Q128;
             positionInfo.rewardGrowthInside = rewardGrowthInside;
         }
         reward += positionInfo.reward;
@@ -521,6 +534,8 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
             ILMPool LMPool = ILMPool(pool.pool.lmPool());
             if (address(LMPool) == address(0)) revert NoLMPool();
             LMPool.updatePosition(tickLower, tickUpper, liquidityDelta);
+            // Update latest rewardGrowthInside
+            positionInfo.rewardGrowthInside = LMPool.getRewardGrowthInside(tickLower, tickUpper);
             emit UpdateLiquidity(msg.sender, positionInfo.pid, _tokenId, liquidityDelta, tickLower, tickUpper);
         }
     }

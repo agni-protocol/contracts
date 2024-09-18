@@ -4,7 +4,8 @@
 const networks = {
   hardhat: 'hardhat',
   mantleTestnet: 'mantleTestnet',
-  mantleMainnet: 'mantleMainnet'
+  mantleMainnet: 'mantleMainnet',
+  mantleSepoliaTestnet: 'mantleSepoliaTestnet',
 }
 
 let network = process.env.NETWORK

@@ -13,7 +13,7 @@ async function main() {
 
   for (let item in pairs.data.pools) {
     console.log("index: ", item, " pair: ", pairs.data.pools[item].id);
-    if (parseInt(item) < 108) {
+    if (parseInt(item) < 199) {
       continue;
     }
 

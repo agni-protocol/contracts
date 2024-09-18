@@ -41,6 +41,12 @@ const config: HardhatUserConfig = {
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
+    mantleSepoliaTestnet: {
+      url: process.env.MANTLE_SEPOLIA_TESTNET_URL || "",
+      gasPrice: 20000000000,
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
@@ -55,6 +61,14 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://explorer.testnet.mantle.xyz/api",
           browserURL: "https://rpc.testnet.mantle.xyz",
+        },
+      },
+      {
+        network: "mantleSepoliaTestnet",
+        chainId: 5003,
+        urls: {
+          apiURL: "https://explorer.sepolia.mantle.xyz/api",
+          browserURL: "https://explorer.sepolia.mantle.xyz/",
         },
       },
       {

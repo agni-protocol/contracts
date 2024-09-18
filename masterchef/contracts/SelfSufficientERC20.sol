@@ -164,7 +164,7 @@ contract SelfSufficientERC20 is ERC20 {
     address owner;
     uint256 max_mint = MAX_MINT;
 
-    uint256 constant MAX_MINT = 1000; // Maximal amount per selfMint transaction.
+    uint256 constant MAX_MINT = 10000; // Maximal amount per selfMint transaction.
 
     function initlialize(
         string memory _name,

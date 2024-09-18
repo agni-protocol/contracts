@@ -1,7 +1,8 @@
 import { ethers,network } from "hardhat";
 const utils = require("../../common/utils");
 
-const LpAddress = "0xAbb213151ee053180348d9423F7F8dAf24F46F02";
+// const LpAddress = "0xa9fe976c41bc8ce9cf89126bad9309adf1efb7e2";   // MAMA-USDT
+const LpAddress = "0x335bb4d6d8166860e9cab64bdd3cb2249c9a469b";   // MAMA-MNT
 
 async function main() {
   const networkName = await network.name;
