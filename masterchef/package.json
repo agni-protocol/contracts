@@ -8,7 +8,8 @@
     "set_lmpool_deployer": "hardhat run scripts/set_lm_deployer.ts --network",
     "add_pool": "hardhat run scripts/add_pool.ts --network",
     "upkeep": "hardhat run scripts/upkeep.ts --network",
-    "verify": "hardhat run scripts/verify.ts --network"
+    "verify": "hardhat run scripts/verify.ts --network",
+    "deposit_wmnt": "hardhat run scripts/deposit_wmnt.ts --network"
   },
   "devDependencies": {
     "@agniswap/core": "file:../core",

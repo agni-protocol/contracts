@@ -11,7 +11,7 @@ async function main() {
   );
   console.log("lm-pool contract addresses:", lmpoolContractAddresses);
 
-  let contractAddresses = utils.getContractAddresses(networkName,"");
+  let contractAddresses = utils.getContractAddresses(networkName, "");
 
   const MasterChef = await ethers.getContractFactory("MasterChef");
   const masterChef = await MasterChef.attach(contractAddresses.MasterChef);
@@ -34,6 +34,22 @@ async function main() {
   if (masterChefReceiver == "0x0000000000000000000000000000000000000000") {
     let setReceiver = await masterChef.setReceiver(
       contractAddresses.MasterChefV3Receiver
+    );
+    console.log("setReceiver tx: ", setReceiver.hash);
+  }
+
+  // set incentive receiver
+  const IncentivePool = await ethers.getContractFactory("ExtraIncentivePool");
+  const incentivePool = await IncentivePool.attach(
+    contractAddresses.ExtraIncentivePool
+  );
+
+  let incentivePoolReceiver = await incentivePool.receiver();
+  console.log("incentivePool receiver:", incentivePoolReceiver);
+
+  if (incentivePoolReceiver == "0x0000000000000000000000000000000000000000") {
+    let setReceiver = await incentivePool.setReceiver(
+      contractAddresses.IncentivePoolReceiver
     );
     console.log("setReceiver tx: ", setReceiver.hash);
   }

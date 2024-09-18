@@ -45,6 +45,7 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
         address user;
         uint256 pid;
         uint256 boostMultiplier;
+        uint32 lastRewardTime;
     }
 
     uint256 public poolLength;
@@ -228,6 +229,39 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
         return address(0);
     }
 
+    /// @notice Returns the NFT owner address.
+    /// @param _tokenId Token Id of NFT.
+    function getOwnerByTokenId(uint256 _tokenId) external view returns (address) {
+        UserPositionInfo memory positionInfo = userPositionInfos[_tokenId];
+        return positionInfo.user;
+    }
+
+    /// @notice Returns the stake start time.
+    /// @param _tokenId Token Id of NFT.
+    function getLastRewardTimeTimeByTokenId(uint256 _tokenId) external view returns (uint32) {
+        UserPositionInfo memory positionInfo = userPositionInfos[_tokenId];
+        return positionInfo.lastRewardTime;
+    }
+
+    /// @notice Returns the liquidity.
+    /// @param _tokenId Token Id of NFT.
+    function getLiquidityByTokenId(uint256 _tokenId) external view returns (uint256 positionLiquidity, uint256 poolLiquidity) {
+        UserPositionInfo memory positionInfo = userPositionInfos[_tokenId];
+        positionLiquidity = uint256(positionInfo.liquidity);
+        if (positionInfo.pid != 0) {
+            PoolInfo memory pool = poolInfo[positionInfo.pid];
+            poolLiquidity = pool.totalLiquidity;
+        }
+    }
+
+    /// @notice Returns the tick.
+    /// @param _tokenId Token Id of NFT.
+    function getPositionTickByTokenId(uint256 _tokenId) external view returns (int24 tickLower, int24 tickUpper) {
+        UserPositionInfo memory positionInfo = userPositionInfos[_tokenId];
+        return (positionInfo.tickLower,positionInfo.tickUpper);
+    }
+
+
     /// @notice View function for checking pending AGNI rewards.
     /// @dev The pending agni amount is based on the last state in LMPool. The actual amount will happen whenever liquidity changes or harvest.
     /// @param _tokenId Token Id of NFT.
@@ -372,6 +406,7 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
         positionInfo.tickUpper = cache.tickUpper;
         positionInfo.user = _from;
         positionInfo.pid = pid;
+        positionInfo.lastRewardTime = uint32(block.timestamp);
         // Need to update LMPool.
         LMPool.accumulateReward(uint32(block.timestamp));
         updateLiquidityOperation(positionInfo, _tokenId, 0);
@@ -439,6 +474,8 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
                 positionInfo.reward = reward;
             }
         }
+
+        positionInfo.lastRewardTime = uint32(block.timestamp);
     }
 
     /// @notice Withdraw LP tokens from pool.

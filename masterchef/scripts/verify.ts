@@ -11,36 +11,44 @@ async function main() {
   );
   console.log("periphery contract addresses:", peripheryContractAddresses);
 
-  let WMNT = "";
-  let AGNI = "";
-
- if (networkName == "mantleMainnet") {
-   WMNT = "0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8";
-   AGNI = "";
- } else {
-   WMNT = "0x67A1f4A939b477A6b7c5BF94D97E45dE87E608eF";
-   AGNI = "0xd3b2241BfF9654195F814a15CbAc458C72Fa5084";
- }
- console.log("WMNT addresses:", WMNT);
- console.log("AGNI addresses:", AGNI);
-
-  let contractAddresses = utils.getContractAddresses(networkName,"");
+  let contractAddresses = utils.getContractAddresses(networkName, "");
+  console.log("WMNT addresses:", contractAddresses.WMNT);
+  console.log("AGNI addresses:", contractAddresses.MasterChefToken);
 
   await hre.run("verify:verify", {
     address: contractAddresses.MasterChef,
     contract: "contracts/MasterChef.sol:MasterChef",
     constructorArguments: [
-      AGNI,
+      contractAddresses.MasterChefToken,
       peripheryContractAddresses.NonfungiblePositionManager,
-      WMNT,
+      contractAddresses.WMNT,
     ],
   });
+
+   await hre.run("verify:verify", {
+     address: contractAddresses.ExtraIncentivePool,
+     contract: "contracts/ExtraIncentivePool.sol:ExtraIncentivePool",
+     constructorArguments: [
+       contractAddresses.IncentiveToken,
+       contractAddresses.MasterChef,
+     ],
+   });
 
   await hre.run("verify:verify", {
     address: contractAddresses.MasterChefV3Receiver,
     contract:
       "contracts/receiver/MasterChefV3Receiver.sol:MasterChefV3Receiver",
-    constructorArguments: [contractAddresses.MasterChef, AGNI],
+    constructorArguments: [contractAddresses.MasterChef, contractAddresses.MasterChefToken],
+  });
+
+  await hre.run("verify:verify", {
+    address: contractAddresses.IncentivePoolReceiver,
+    contract:
+      "contracts/receiver/IncentivePoolReceiver.sol:IncentivePoolReceiver",
+    constructorArguments: [
+      contractAddresses.ExtraIncentivePool,
+      contractAddresses.IncentiveToken,
+    ],
   });
 }
 
