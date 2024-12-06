@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-interface IIncentive {
+interface IIncentivePool {
     function latestPeriodEndTime() external view returns (uint256);
 
     function latestPeriodStartTime() external view returns (uint256);
@@ -13,4 +13,6 @@ interface IIncentive {
     function getLiquidityByTokenId(uint256 _tokenId) external view returns (uint256 , uint256 );
 
     function getLastRewardTimeTimeByTokenId(uint256 _tokenId) external view returns (uint32);
+
+    function harvest(uint256 _tokenId) external returns (uint256 reward);
 }

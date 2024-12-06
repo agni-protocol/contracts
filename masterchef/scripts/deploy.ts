@@ -69,6 +69,11 @@ async function main() {
     incentivePoolReceiver.address
   );
 
+  let setIncentivePoolContractTx = await masterChef.setIncentivePoolContract(
+    extraIncentivePool.address
+  );
+  console.log("setIncentivePoolContract tx", setIncentivePoolContractTx.hash);
+
   let contractAddresses = {
     MasterChef: masterChef.address,
     MasterChefV3Receiver: masterChefV3Receiver.address,

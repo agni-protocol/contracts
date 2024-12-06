@@ -13,7 +13,7 @@ async function main() {
 
   for (let item in pairs.data.pools) {
     console.log("index: ", item, " pair: ", pairs.data.pools[item].id);
-    if (parseInt(item) < 199) {
+    if (parseInt(item) < 100) {
       continue;
     }
 
@@ -61,7 +61,7 @@ async function main() {
 
     let collectFee = await AgniFactory.collectProtocol(
       poolAddress,
-      "0x753294CE825fFcdFC31E6676D66907D81a948668",
+      "0x753294CE825fFcdFC31E6676D66907D81a948668", // @popo 收币地址
       pfee.token0,
       pfee.token1
     );

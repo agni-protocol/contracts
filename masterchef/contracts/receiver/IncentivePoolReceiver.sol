@@ -4,13 +4,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import "../interfaces/IIncentive.sol";
+import "../interfaces/IIncentivePool.sol";
 
 contract IncentivePoolReceiver is Ownable {
     using SafeERC20 for IERC20;
 
     IERC20 public immutable incentiveToken;
-    IIncentive public immutable IncentivePool;
+    IIncentivePool public immutable incentivePool;
 
     address public operatorAddress;
 
@@ -30,8 +30,8 @@ contract IncentivePoolReceiver is Ownable {
     /// @notice Constructor.
     /// @param _incentivePool IncentivePool address.
     /// @param _incentiveToken incentiveToken token address.
-    constructor(IIncentive _incentivePool, IERC20 _incentiveToken) {
-        IncentivePool = _incentivePool;
+    constructor(IIncentivePool _incentivePool, IERC20 _incentiveToken) {
+        incentivePool = _incentivePool;
         incentiveToken = _incentiveToken;
 
         incentiveToken.safeApprove(address(_incentivePool), type(uint256).max);
@@ -47,8 +47,8 @@ contract IncentivePoolReceiver is Ownable {
         if (_amount == 0 || _amount > balance) {
             amount = balance;
         }
-        IncentivePool.upkeep(amount, _duration);
-        emit Upkeep(address(IncentivePool), amount);
+        incentivePool.upkeep(amount, _duration);
+        emit Upkeep(address(incentivePool), amount);
     }
 
     /// @notice Set operator address.

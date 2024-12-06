@@ -12,6 +12,7 @@ import "./interfaces/IAgniPool.sol";
 import "./interfaces/ILMPool.sol";
 import "./interfaces/ILMPoolDeployer.sol";
 import "./interfaces/IFarmBooster.sol";
+import "./interfaces/IIncentivePool.sol";
 import "./interfaces/IWMNT.sol";
 import "./utils/Multicall.sol";
 import "./Enumerable.sol";
@@ -77,6 +78,9 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
 
     /// @notice Address of farm booster contract.
     IFarmBooster public FARM_BOOSTER;
+
+    /// @notice Address of incentive pool contract.
+    IIncentivePool public incentivePool;
 
     /// @notice Only use for emergency situations.
     bool public emergency;
@@ -160,6 +164,7 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
         uint256 remainingAgni
     );
     event UpdateFarmBoostContract(address indexed farmBoostContract);
+    event NewIncentivePoolContract(address indexed incentivePoolContract);
     event SetEmergency(bool emergency);
 
     modifier onlyOwnerOrOperator() {
@@ -476,6 +481,9 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
         }
 
         positionInfo.lastRewardTime = uint32(block.timestamp);
+
+        // harvest incentive reward
+        incentivePool.harvest(_tokenId);
     }
 
     /// @notice Withdraw LP tokens from pool.
@@ -733,8 +741,7 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
     /// @dev The amountMinimum parameter prevents malicious contracts from stealing the token from users
     /// @param token The contract address of the token which will be transferred to `recipient`
     /// @param amountMinimum The minimum amount of token required for a transfer
-    /// @param recipient The destination address of the token
-    function sweepToken(address token, uint256 amountMinimum, address recipient) external nonReentrant {
+    function sweepToken(address token, uint256 amountMinimum) external onlyOwner nonReentrant {
         uint256 balanceToken = IERC20(token).balanceOf(address(this));
         // Need to reduce agniAmountBelongToMC.
         if (token == address(AGNI)) {
@@ -752,7 +759,7 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
         if (balanceToken < amountMinimum) revert InsufficientAmount();
 
         if (balanceToken > 0) {
-            IERC20(token).safeTransfer(recipient, balanceToken);
+            IERC20(token).safeTransfer(msg.sender, balanceToken);
         }
     }
 
@@ -858,6 +865,14 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
         // farm booster can be zero address when need to remove farm booster
         FARM_BOOSTER = IFarmBooster(_newFarmBoostContract);
         emit UpdateFarmBoostContract(_newFarmBoostContract);
+    }
+
+    /// @notice Set incentivePool contract address.
+    /// @param _incentivePoolContract The new incentivePool address.
+    function setIncentivePoolContract(address _incentivePoolContract) external onlyOwner {
+        if (_incentivePoolContract == address(0)) revert ZeroAddress();
+        incentivePool = IIncentivePool(_incentivePoolContract);
+        emit NewIncentivePoolContract(_incentivePoolContract);
     }
 
     /**

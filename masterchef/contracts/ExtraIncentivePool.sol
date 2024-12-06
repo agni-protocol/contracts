@@ -56,6 +56,7 @@ contract ExtraIncentivePool is Ownable,Multicall, ReentrancyGuard {
     error InvalidPool();
     error ZeroAddress();
     error InvalidPeriodDuration();
+    error InsufficientAmount();
 
     event AddPool(IAgniPool indexed pool, uint256 allocPoint);
     event SetPool(IAgniPool indexed pool, uint256 allocPoint);
@@ -75,6 +76,7 @@ contract ExtraIncentivePool is Ownable,Multicall, ReentrancyGuard {
     );
     event NewPeriodDuration(uint256 periodDuration);
     event Harvest(address indexed sender, address to, uint256 indexed tokenId, uint256 reward);
+    event Withdraw(address indexed token, address indexed to, uint256 amount);
 
     modifier onlyValidPool(address _pool) {
         PoolInfo storage _poolInfo  = poolInfos[_pool];
@@ -84,6 +86,11 @@ contract ExtraIncentivePool is Ownable,Multicall, ReentrancyGuard {
 
     modifier onlyReceiver() {
         require(receiver == msg.sender, "Not receiver");
+        _;
+    }
+
+    modifier onlyMasterChef() {
+        require(msg.sender == address(masterChef), "Not MC");
         _;
     }
 
@@ -169,7 +176,7 @@ contract ExtraIncentivePool is Ownable,Multicall, ReentrancyGuard {
     /// @notice harvest incentive token from pool.
     /// @param _tokenId Token Id of NFT.
     /// @return reward incentive token reward.
-    function harvest(uint256 _tokenId) external nonReentrant returns (uint256 reward) {
+    function harvest(uint256 _tokenId) external nonReentrant onlyMasterChef returns (uint256 reward) {
         address tokenOwner = masterChef.getOwnerByTokenId(_tokenId);
         reward = this.pendingIncentiveToken(_tokenId);
         if (reward > 0){
@@ -223,6 +230,33 @@ contract ExtraIncentivePool is Ownable,Multicall, ReentrancyGuard {
         if (_periodDuration < MIN_DURATION || _periodDuration > MAX_DURATION) revert InvalidPeriodDuration();
         PERIOD_DURATION = _periodDuration;
         emit NewPeriodDuration(_periodDuration);
+    }
+
+    
+    /// @notice Transfers the full amount of a token held by this contract to recipient
+    /// @dev The amountMinimum parameter prevents malicious contracts from stealing the token from users
+    /// @param token The contract address of the token which will be transferred to `recipient`
+    /// @param amountMinimum The minimum amount of token required for a transfer
+    function sweepToken(address token, uint256 amountMinimum) external onlyOwner nonReentrant {
+        uint256 balanceToken = IERC20(token).balanceOf(address(this));
+        // Need to reduce incentiveAmountBelongToMC.
+        if (token == address(incentiveToken)) {
+            unchecked {
+                // In fact balance should always be greater than or equal to incentiveAmountBelongToMC, but in order to avoid any unknown issue, we added this check.
+                if (balanceToken >= incentiveAmountBelongToMC) {
+                    balanceToken -= incentiveAmountBelongToMC;
+                } else {
+                    // This should never happend.
+                    incentiveAmountBelongToMC = balanceToken;
+                    balanceToken = 0;
+                }
+            }
+        }
+        if (balanceToken < amountMinimum) revert InsufficientAmount();
+
+        if (balanceToken > 0) {
+            IERC20(token).safeTransfer(msg.sender, balanceToken);
+        }
     }
 
     /// @notice Safe Transfer incentiveToken.
