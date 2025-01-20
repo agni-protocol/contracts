@@ -11,6 +11,8 @@ async function main() {
 
   let pairs = await fetchPairs();
 
+  console.log(JSON.stringify(pairs.data.pools[0]))
+
   for (let item in pairs.data.pools) {
     console.log("index: ", item, " pair: ", pairs.data.pools[item].id);
     if (parseInt(item) < 100) {
@@ -40,17 +42,17 @@ async function main() {
       "token0: ",
       token0Name,
       "fee balance: ",
-      ethers.utils.formatUnits(pfee.token0, token0Decimals)
+      ethers.formatUnits(pfee.token0, token0Decimals)
     );
     console.log(
       "token1:",
       token1Name,
       "fee balance: ",
-      ethers.utils.formatUnits(pfee.token1, token1Decimals)
+      ethers.formatUnits(pfee.token1, token1Decimals)
     );
 
     // 0 fee
-    if (pfee.token0.isZero() && pfee.token1.isZero()) {
+    if (pfee.token0 === 0n && pfee.token1 === 0n) {
       continue;
     }
 

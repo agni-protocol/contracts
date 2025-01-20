@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@agniswap/core": "file:../core",
+    "@agniswap/v2-core": "file:../v2-protocol",
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",
     "@openzeppelin/contracts": "3.4.2-solc-0.7",
     "@openzeppelin/contracts-upgradeable": "3.4.2-solc-0.7",

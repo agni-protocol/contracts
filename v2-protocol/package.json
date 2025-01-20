@@ -1,0 +1,21 @@
+{
+  "name": "@agniswap/v2-core",
+  "description": "Exchange contracts from Uniswap v2, and new features (zaps)",
+  "version": "2.0.0",
+  "license": "GPL-3.0/MIT",
+  "private": true,
+  "scripts": {
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy.ts --network ",
+    "verify": "hardhat run scripts/verify.ts --network ",
+    "test:size-contracts": "hardhat size-contracts"
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-etherscan": "^3.1.8",
+    "@openzeppelin/contracts": "^4.2.0",
+    "@uniswap/lib": "4.0.1-alpha",
+    "hardhat": "^2.22.8",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}

@@ -1,6 +1,5 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
-import "@nomiclabs/hardhat-etherscan";
 import "hardhat-gas-reporter";
 import "hardhat-contract-sizer";
 import dotenv from "dotenv";
@@ -43,8 +42,11 @@ const config: HardhatUserConfig = {
     currency: "USD",
   },
   etherscan: {
-    // apiKey: process.env.MANTLE_API_KEY,
-    apiKey: process.env.MANTLESCAN_API_KEY,
+    apiKey: {
+      mantleTestnet: process.env.MANTLE_API_KEY,
+      mantleMainnet:  process.env.MANTLE_API_KEY,
+      mantleSepoliaTestnet: process.env.MANTLE_API_KEY,
+    },
     customChains: [
       {
         network: "mantleTestnet",

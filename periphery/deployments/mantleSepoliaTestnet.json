@@ -7,5 +7,7 @@
   "NFTDescriptor": "0x7C20eE7CC3230003401cC19BF076871Aedf39856",
   "NonfungibleTokenPositionDescriptor": "0x497bd1C86a1088e80f58EaA13de8C81aB70a4e79",
   "NonfungiblePositionManager": "0x71959543c31EC4d68D9D6C492Bf69A1C174bb394",
-  "AgniInterfaceMulticall": "0x49b05721B9615dC1811E20F47D5700dA2d6Ed429"
+  "AgniInterfaceMulticall": "0x49b05721B9615dC1811E20F47D5700dA2d6Ed429",
+  "mixedRouteQuoterV1": "0x6d8f93d9FcD8986E716346DAdF2C5ce84cA8D808",
+  "smartRouterHelper": "0xDaEd369adBE012fe1aF5AE131a720Bc08997C66A"
 }
