@@ -1,26 +1,30 @@
 import { HardhatUserConfig } from "hardhat/config";
-import "@nomiclabs/hardhat-ethers";
-import "@nomiclabs/hardhat-web3";
-import "@nomiclabs/hardhat-truffle5";
-import "hardhat-abi-exporter";
+import "@nomicfoundation/hardhat-toolbox";
+import "hardhat-gas-reporter";
 import "hardhat-contract-sizer";
-import "solidity-coverage";
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config();
+
+
 
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   networks: {
-    hardhat: {},
-    mainnet: {
+    mantleTestnet: {
+      url: process.env.MANTLE_TESTNET_URL || "",
+      accounts:
+          process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+    mantleMainnet: {
       url: process.env.MANTLE_URL || "",
       accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+          process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
-    testnet: {
-      url: process.env.MANTLE_TESTNET_URL || "",
+    mantleSepoliaTestnet: {
+      url: process.env.MANTLE_SEPOLIA_TESTNET_URL || "",
       gasPrice: 50000000000,
       accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+          process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
   },
   solidity: {
@@ -68,32 +72,6 @@ const config: HardhatUserConfig = {
     tests: "./test",
     cache: "./cache",
     artifacts: "./artifacts",
-  },
-  abiExporter: {
-    path: "./data/abi",
-    clear: true,
-    flat: false,
-  },
-  etherscan: {
-    apiKey: process.env.MANTLESCAN_API_KEY,
-    customChains: [
-      {
-        network: "testnet",
-        chainId: 5003,
-        urls: {
-          apiURL: "https://explorer.sepolia.mantle.xyz/api",
-          browserURL: "https://explorer.sepolia.mantle.xyz/",
-        },
-      },
-      {
-        network: "mainnet",
-        chainId: 5000,
-        urls: {
-          apiURL: "https://explorer.mantle.xyz/api",
-          browserURL: "https://explorer.mantle.xyz/",
-        },
-      },
-    ],
   },
 };
 

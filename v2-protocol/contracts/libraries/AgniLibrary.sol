@@ -29,7 +29,7 @@ library AgniLibrary {
                         hex"ff",
                         factory,
                         keccak256(abi.encodePacked(token0, token1)),
-                        hex"a5934690703a592a07e841ca29d5e5c79b5e22ed4749057bb216dc31100be1c0" // init code hash
+                        hex"32c0c6de30723d6476d34f01d79ce2df1df1a7ce4ea97ab3d9284b60dd59e540" // init code hash
                     )
                 )
             )
