@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity =0.6.6;
+pragma solidity >=0.6.6;
 
-import '@uniswap/lib/contracts/libraries/TransferHelper.sol';
 
 import "./interfaces/IAgniRouter.sol";
 import "./interfaces/IAgniFactory.sol";
 import "./libraries/AgniLibrary.sol";
 import "./libraries/SafeMath.sol";
-import "./interfaces/IERC20.sol";
+import "./libraries/SafeTransferHelper.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./interfaces/IWETH.sol";
 
 contract AgniRouter is IAgniRouter {
@@ -82,8 +82,8 @@ contract AgniRouter is IAgniRouter {
     {
         (amountA, amountB) = _addLiquidity(tokenA, tokenB, amountADesired, amountBDesired, amountAMin, amountBMin);
         address pair = AgniLibrary.pairFor(factory, tokenA, tokenB);
-        TransferHelper.safeTransferFrom(tokenA, msg.sender, pair, amountA);
-        TransferHelper.safeTransferFrom(tokenB, msg.sender, pair, amountB);
+        SafeTransferHelper.safeTransferFrom(tokenA, msg.sender, pair, amountA);
+        SafeTransferHelper.safeTransferFrom(tokenB, msg.sender, pair, amountB);
         liquidity = IAgniPair(pair).mint(to);
     }
 
@@ -115,12 +115,12 @@ contract AgniRouter is IAgniRouter {
             amountETHMin
         );
         address pair = AgniLibrary.pairFor(factory, token, WETH);
-        TransferHelper.safeTransferFrom(token, msg.sender, pair, amountToken);
+        SafeTransferHelper.safeTransferFrom(token, msg.sender, pair, amountToken);
         IWETH(WETH).deposit{value: amountETH}();
         assert(IWETH(WETH).transfer(pair, amountETH));
         liquidity = IAgniPair(pair).mint(to);
         // refund dust eth, if any
-        if (msg.value > amountETH) TransferHelper.safeTransferETH(msg.sender, msg.value - amountETH);
+        if (msg.value > amountETH) SafeTransferHelper.safeTransferMNT(msg.sender, msg.value - amountETH);
     }
 
     // **** REMOVE LIQUIDITY ****
@@ -159,9 +159,9 @@ contract AgniRouter is IAgniRouter {
             address(this),
             deadline
         );
-        TransferHelper.safeTransfer(token, to, amountToken);
+        SafeTransferHelper.safeTransfer(token, to, amountToken);
         IWETH(WETH).withdraw(amountETH);
-        TransferHelper.safeTransferETH(to, amountETH);
+        SafeTransferHelper.safeTransferMNT(to, amountETH);
     }
 
     function removeLiquidityWithPermit(
@@ -211,9 +211,9 @@ contract AgniRouter is IAgniRouter {
         uint256 deadline
     ) public virtual override ensure(deadline) returns (uint256 amountETH) {
         (, amountETH) = removeLiquidity(token, WETH, liquidity, amountTokenMin, amountETHMin, address(this), deadline);
-        TransferHelper.safeTransfer(token, to, IERC20(token).balanceOf(address(this)));
+        SafeTransferHelper.safeTransfer(token, to, IERC20(token).balanceOf(address(this)));
         IWETH(WETH).withdraw(amountETH);
-        TransferHelper.safeTransferETH(to, amountETH);
+        SafeTransferHelper.safeTransferMNT(to, amountETH);
     }
 
     function removeLiquidityETHWithPermitSupportingFeeOnTransferTokens(
@@ -268,7 +268,7 @@ contract AgniRouter is IAgniRouter {
     ) external virtual override ensure(deadline) returns (uint256[] memory amounts) {
         amounts = AgniLibrary.getAmountsOut(factory, amountIn, path);
         require(amounts[amounts.length - 1] >= amountOutMin, "AgniRouter: INSUFFICIENT_OUTPUT_AMOUNT");
-        TransferHelper.safeTransferFrom(
+        SafeTransferHelper.safeTransferFrom(
             path[0],
             msg.sender,
             AgniLibrary.pairFor(factory, path[0], path[1]),
@@ -286,7 +286,7 @@ contract AgniRouter is IAgniRouter {
     ) external virtual override ensure(deadline) returns (uint256[] memory amounts) {
         amounts = AgniLibrary.getAmountsIn(factory, amountOut, path);
         require(amounts[0] <= amountInMax, "AgniRouter: EXCESSIVE_INPUT_AMOUNT");
-        TransferHelper.safeTransferFrom(
+        SafeTransferHelper.safeTransferFrom(
             path[0],
             msg.sender,
             AgniLibrary.pairFor(factory, path[0], path[1]),
@@ -319,7 +319,7 @@ contract AgniRouter is IAgniRouter {
         require(path[path.length - 1] == WETH, "AgniRouter: INVALID_PATH");
         amounts = AgniLibrary.getAmountsIn(factory, amountOut, path);
         require(amounts[0] <= amountInMax, "AgniRouter: EXCESSIVE_INPUT_AMOUNT");
-        TransferHelper.safeTransferFrom(
+        SafeTransferHelper.safeTransferFrom(
             path[0],
             msg.sender,
             AgniLibrary.pairFor(factory, path[0], path[1]),
@@ -327,7 +327,7 @@ contract AgniRouter is IAgniRouter {
         );
         _swap(amounts, path, address(this));
         IWETH(WETH).withdraw(amounts[amounts.length - 1]);
-        TransferHelper.safeTransferETH(to, amounts[amounts.length - 1]);
+        SafeTransferHelper.safeTransferMNT(to, amounts[amounts.length - 1]);
     }
 
     function swapExactTokensForETH(
@@ -340,7 +340,7 @@ contract AgniRouter is IAgniRouter {
         require(path[path.length - 1] == WETH, "AgniRouter: INVALID_PATH");
         amounts = AgniLibrary.getAmountsOut(factory, amountIn, path);
         require(amounts[amounts.length - 1] >= amountOutMin, "AgniRouter: INSUFFICIENT_OUTPUT_AMOUNT");
-        TransferHelper.safeTransferFrom(
+        SafeTransferHelper.safeTransferFrom(
             path[0],
             msg.sender,
             AgniLibrary.pairFor(factory, path[0], path[1]),
@@ -348,7 +348,7 @@ contract AgniRouter is IAgniRouter {
         );
         _swap(amounts, path, address(this));
         IWETH(WETH).withdraw(amounts[amounts.length - 1]);
-        TransferHelper.safeTransferETH(to, amounts[amounts.length - 1]);
+        SafeTransferHelper.safeTransferMNT(to, amounts[amounts.length - 1]);
     }
 
     function swapETHForExactTokens(
@@ -364,7 +364,7 @@ contract AgniRouter is IAgniRouter {
         assert(IWETH(WETH).transfer(AgniLibrary.pairFor(factory, path[0], path[1]), amounts[0]));
         _swap(amounts, path, to);
         // refund dust eth, if any
-        if (msg.value > amounts[0]) TransferHelper.safeTransferETH(msg.sender, msg.value - amounts[0]);
+        if (msg.value > amounts[0]) SafeTransferHelper.safeTransferMNT(msg.sender, msg.value - amounts[0]);
     }
 
     // **** SWAP (supporting fee-on-transfer tokens) ****
@@ -398,7 +398,7 @@ contract AgniRouter is IAgniRouter {
         address to,
         uint256 deadline
     ) external virtual override ensure(deadline) {
-        TransferHelper.safeTransferFrom(
+        SafeTransferHelper.safeTransferFrom(
             path[0],
             msg.sender,
             AgniLibrary.pairFor(factory, path[0], path[1]),
@@ -438,7 +438,7 @@ contract AgniRouter is IAgniRouter {
         uint256 deadline
     ) external virtual override ensure(deadline) {
         require(path[path.length - 1] == WETH, "AgniRouter: INVALID_PATH");
-        TransferHelper.safeTransferFrom(
+        SafeTransferHelper.safeTransferFrom(
             path[0],
             msg.sender,
             AgniLibrary.pairFor(factory, path[0], path[1]),
@@ -448,7 +448,7 @@ contract AgniRouter is IAgniRouter {
         uint256 amountOut = IERC20(WETH).balanceOf(address(this));
         require(amountOut >= amountOutMin, "AgniRouter: INSUFFICIENT_OUTPUT_AMOUNT");
         IWETH(WETH).withdraw(amountOut);
-        TransferHelper.safeTransferETH(to, amountOut);
+        SafeTransferHelper.safeTransferMNT(to, amountOut);
     }
 
     // **** LIBRARY FUNCTIONS ****

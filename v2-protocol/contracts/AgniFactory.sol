@@ -1,29 +1,27 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity =0.5.16;
+pragma solidity =0.7.6;
 
 import './interfaces/IAgniFactory.sol';
 import './AgniPair.sol';
 
 contract AgniFactory is IAgniFactory {
-    bytes32 public constant INIT_CODE_PAIR_HASH = keccak256(abi.encodePacked(type(AgniPair).creationCode));
+    bytes32 public constant override INIT_CODE_PAIR_HASH = keccak256(abi.encodePacked(type(AgniPair).creationCode));
 
-    address public feeTo;
-    address public feeToSetter;
+    address public override feeTo;
+    address public override feeToSetter;
 
-    mapping(address => mapping(address => address)) public getPair;
-    address[] public allPairs;
-
-    event PairCreated(address indexed token0, address indexed token1, address pair, uint);
+    mapping(address => mapping(address => address)) public override getPair;
+    address[] public override allPairs;
 
     constructor(address _feeToSetter) public {
         feeToSetter = _feeToSetter;
     }
 
-    function allPairsLength() external view returns (uint) {
+    function allPairsLength() external override view returns (uint) {
         return allPairs.length;
     }
 
-    function createPair(address tokenA, address tokenB) external returns (address pair) {
+    function createPair(address tokenA, address tokenB) external override returns (address pair) {
         require(tokenA != tokenB, 'Agni: IDENTICAL_ADDRESSES');
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
         require(token0 != address(0), 'Agni: ZERO_ADDRESS');
@@ -40,12 +38,12 @@ contract AgniFactory is IAgniFactory {
         emit PairCreated(token0, token1, pair, allPairs.length);
     }
 
-    function setFeeTo(address _feeTo) external {
+    function setFeeTo(address _feeTo) external override {
         require(msg.sender == feeToSetter, 'Agni: FORBIDDEN');
         feeTo = _feeTo;
     }
 
-    function setFeeToSetter(address _feeToSetter) external {
+    function setFeeToSetter(address _feeToSetter) external override{
         require(msg.sender == feeToSetter, 'Agni: FORBIDDEN');
         feeToSetter = _feeToSetter;
     }

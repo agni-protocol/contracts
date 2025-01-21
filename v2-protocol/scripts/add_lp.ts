@@ -32,10 +32,10 @@ async function main() {
         USDT
     );
 
-    await IERC20.approve(
-        contractAddresses.AgniRouter,
-        "10000000000000000000000000000"
-    )
+    // await IERC20.approve(
+    //     contractAddresses.AgniRouter,
+    //     "10000000000000000000000000000"
+    // )
 
     await AgniRouter.addLiquidityETH(
         USDT,
