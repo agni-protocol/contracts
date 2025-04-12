@@ -8,6 +8,7 @@
   "NonfungibleTokenPositionDescriptor": "0x497bd1C86a1088e80f58EaA13de8C81aB70a4e79",
   "NonfungiblePositionManager": "0x71959543c31EC4d68D9D6C492Bf69A1C174bb394",
   "AgniInterfaceMulticall": "0x49b05721B9615dC1811E20F47D5700dA2d6Ed429",
-  "mixedRouteQuoterV1": "0x6d8f93d9FcD8986E716346DAdF2C5ce84cA8D808",
-  "smartRouterHelper": "0xDaEd369adBE012fe1aF5AE131a720Bc08997C66A"
+  "mixedRouteQuoterV1": "0xE1E898d8C7519440d6F8c2B674642A9a617eD02c",
+  "smartRouterHelper": "0x8A168c3E24Ea84AcEb4E2dDD56Ff74456dCf3Ed8",
+  "smartRouter": "0xb5Dc27be0a565A4A80440f41c74137001920CB22"
 }

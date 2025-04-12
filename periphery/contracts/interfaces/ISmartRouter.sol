@@ -4,11 +4,10 @@ pragma abicoder v2;
 
 import './ISelfPermit.sol';
 import './IMulticall.sol';
-import './ISwapRouter.sol';
-import './ISwapRouter.sol';
+import './IAgniRouterV3.sol';
 import '@agniswap/v2-core/contracts/interfaces/IAgniRouterV2.sol';
 
 
-interface ISmartRouter is ISwapRouter, IAgniRouterV2,  IMulticall, ISelfPermit {
+interface ISmartRouter is IAgniRouterV3, IAgniRouterV2,  IMulticall, ISelfPermit {
 
 }

@@ -45,6 +45,19 @@ async function main() {
     );
     console.log("mixedRouteQuoterV1", mixedRouteQuoterV1.address);
 
+    const SmartRouter = await ethers.getContractFactory('SmartRouter', {
+        libraries: {
+            SmartRouterHelper: smartRouterHelper.address,
+        },
+    })
+    const smartRouter = await SmartRouter.deploy(
+        v2CoreContractAddresses.AgniFactory,
+        coreContractAddresses.AgniPoolDeployer,
+        coreContractAddresses.AgniFactory,
+        WMNT,
+    )
+    console.log('SmartRouterHelper deployed to:', smartRouter.address)
+
     {
         let contractAddresses = utils.getContractAddresses(networkName,"");
         utils.writeContractAddresses(
@@ -53,6 +66,7 @@ async function main() {
                 ...contractAddresses,
                 mixedRouteQuoterV1:mixedRouteQuoterV1.address,
                 smartRouterHelper:smartRouterHelper.address,
+                smartRouter:smartRouter.address,
             }
         )
     }
@@ -70,54 +84,6 @@ async function main() {
             ],
         });
     }
-
-
-}
-async function createSmartRouter() {
-    const networkName = await network.name;
-    console.log("Network name=", networkName);
-
-    const [owner] = await ethers.getSigners();
-
-    let coreContractAddresses = utils.getContractAddresses(
-        networkName,
-        `../core/deployments/${networkName}.json`
-    );
-    let v2CoreContractAddresses = utils.getContractAddresses(
-        networkName,
-        `../v2-protocol/deployments/${networkName}.json`
-    );
-
-    let WMNT = "";
-    if (networkName == "mantleMainnet") {
-        WMNT = "0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8";
-    } else {
-        WMNT = "0x67A1f4A939b477A6b7c5BF94D97E45dE87E608eF";
-    }
-    console.log("WMNT addresses:", WMNT);
-
-
-    const SmartRouter = await ethers.getContractFactory('SmartRouter')
-    const smartRouter = await SmartRouter.deploy(
-        v2CoreContractAddresses.AgniFactory,
-        coreContractAddresses.AgniPoolDeployer,
-        coreContractAddresses.AgniFactory,
-        WMNT,
-    )
-    console.log('SmartRouterHelper deployed to:', smartRouter.address)
-
-
-    {
-        let contractAddresses = utils.getContractAddresses(networkName,"");
-        utils.writeContractAddresses(
-            networkName,
-            {
-                ...contractAddresses,
-                smartRouter:smartRouter.address,
-            }
-        )
-    }
-
     {
         let contractAddresses = utils.getContractAddresses(networkName,"");
         await hre.run("verify:verify", {
@@ -132,12 +98,11 @@ async function createSmartRouter() {
         });
     }
 
-
 }
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
-createSmartRouter().catch((error) => {
+main().catch((error) => {
     console.error(error);
     process.exitCode = 1;
 });

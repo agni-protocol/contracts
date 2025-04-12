@@ -68,8 +68,11 @@ const config: HardhatUserConfig = {
         network: "mantleMainnet",
         chainId: 5000,
         urls: {
-          apiURL: "https://explorer.mantle.xyz/api",
-          browserURL: "https://explorer.mantle.xyz/",
+          // apiURL: "https://explorer.mantle.xyz/api",
+          // browserURL: "https://explorer.mantle.xyz/",
+          apiURL: "https://api.mantlescan.xyz/api",
+          browserURL: "https://mantlescan.xyz/",
+
         },
       },
     ],

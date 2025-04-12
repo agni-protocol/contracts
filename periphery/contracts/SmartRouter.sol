@@ -4,15 +4,19 @@ pragma abicoder v2;
 
 import './SwapRouter.sol';
 import './base/Multicall.sol';
-import './base/PeripheryImmutableState.sol';
 import './base/SelfPermit.sol';
 import './interfaces/ISmartRouter.sol';
-import '@agniswap/v2-core/contracts/AgniRouterV2.sol';
+import './AgniRouterV2.sol';
+import './AgniRouterV3.sol';
+import './base/PeripheryImmutableState.sol';
+import './base/ImmutableState.sol';
 
 contract SmartRouter is
         ISmartRouter,
-        SwapRouter,
-        AgniRouterV2
+        AgniRouterV3,
+        AgniRouterV2,
+        Multicall,
+        SelfPermit
 {
 
     constructor(
@@ -20,6 +24,6 @@ contract SmartRouter is
         address _deployer,
         address _factoryV3,
         address _WMNT
-    ) AgniRouterV2(_factoryV2, _WMNT) SwapRouter(_deployer, _factoryV3, _WMNT) {}
+    ) ImmutableState(_factoryV2) PeripheryImmutableState(_deployer, _factoryV3, _WMNT) {}
 
 }
