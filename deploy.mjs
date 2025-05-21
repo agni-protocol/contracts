@@ -1,6 +1,8 @@
 #!/usr/bin/env zx
 // import 'zx/globals'
 
+import fs from 'fs-extra'
+
 const networks = {
   hardhat: 'hardhat',
   mantleTestnet: 'mantleTestnet',
@@ -8,7 +10,7 @@ const networks = {
   mantleSepoliaTestnet: 'mantleSepoliaTestnet',
 }
 
-let network = process.env.NETWORK
+let network = "mantleMainnet"
 console.log(network, 'network')
 if (!network || !networks[network]) {
   throw new Error(`env NETWORK: ${network}`)
@@ -30,7 +32,7 @@ const addresses = {
   ...mu,
 }
 
-console.log(chalk.blue('Writing to file...'))
-console.log(chalk.yellow(JSON.stringify(addresses, null, 2)))
+// console.log(chalk.blue('Writing to file...'))
+// console.log(chalk.yellow(JSON.stringify(addresses, null, 2)))
 
 fs.writeJson(`./deployments/${network}.json`, addresses, { spaces: 2 })

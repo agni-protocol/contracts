@@ -27,6 +27,38 @@ const config: HardhatUserConfig = {
           process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
   },
+  etherscan: {
+    apiKey: process.env.MANTLESCAN_API_KEY,
+    customChains: [
+      {
+        network: "mantleTestnet",
+        chainId: 5001,
+        urls: {
+          apiURL: "https://explorer.testnet.mantle.xyz/api",
+          browserURL: "https://rpc.testnet.mantle.xyz",
+        },
+      },
+      {
+        network: "mantleSepoliaTestnet",
+        chainId: 5003,
+        urls: {
+          apiURL: "https://explorer.sepolia.mantle.xyz/api",
+          browserURL: "https://explorer.sepolia.mantle.xyz/",
+        },
+      },
+      {
+        network: "mantleMainnet",
+        chainId: 5000,
+        urls: {
+          // apiURL: "https://explorer.mantle.xyz/api",
+          // browserURL: "https://explorer.mantle.xyz/",
+          apiURL: "https://api.mantlescan.xyz/api",
+          browserURL: "https://mantlescan.xyz/",
+        },
+      }
+    ],
+  },
+
   solidity: {
     compilers: [
       {

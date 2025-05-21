@@ -12,7 +12,7 @@ library SmartRouterHelper {
 
     /************************************************** V2 **************************************************/
 
-    bytes32 internal constant V2_INIT_CODE_HASH = 0x32c0c6de30723d6476d34f01d79ce2df1df1a7ce4ea97ab3d9284b60dd59e540;
+    bytes32 internal constant V2_INIT_CODE_HASH = 0x9f069684a442182358aa78dcfcdb94306295a8aa99f3ae103bf1e5ba30bfa0de;
 
     // returns sorted token addresses, used to handle return values from pairs sorted in this order
     function sortTokens(address tokenA, address tokenB) public pure returns (address token0, address token1) {

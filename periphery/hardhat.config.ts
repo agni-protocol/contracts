@@ -68,7 +68,7 @@ const config: HardhatUserConfig = {
         urls: {
           // apiURL: "https://explorer.mantle.xyz/api",
           // browserURL: "https://explorer.mantle.xyz/",
-          apiURL: "https://mantlescan.xyz/api",
+          apiURL: "https://api.mantlescan.xyz/api",
           browserURL: "https://mantlescan.xyz/",
         },
       }

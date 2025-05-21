@@ -71,19 +71,43 @@ async function main() {
         )
     }
 
-    {
-        let contractAddresses = utils.getContractAddresses(networkName,"");
-        await hre.run("verify:verify", {
-            address: contractAddresses.mixedRouteQuoterV1,
-            contract: "contracts/lens/MixedRouteQuoterV1.sol:MixedRouteQuoterV1",
-            constructorArguments: [
-                coreContractAddresses.AgniPoolDeployer,
-                coreContractAddresses.AgniFactory,
-                v2CoreContractAddresses.AgniFactory,
-                WMNT
-            ],
-        });
+
+
+}
+
+async function main2(){
+    const networkName = await network.name;
+    console.log("Network name=", networkName);
+    let coreContractAddresses = utils.getContractAddresses(
+        networkName,
+        `../core/deployments/${networkName}.json`
+    );
+    let v2CoreContractAddresses = utils.getContractAddresses(
+        networkName,
+        `../v2-protocol/deployments/${networkName}.json`
+    );
+
+    let WMNT = "";
+    if (networkName == "mantleMainnet") {
+        WMNT = "0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8";
+    } else {
+        WMNT = "0x67A1f4A939b477A6b7c5BF94D97E45dE87E608eF";
     }
+    console.log("WMNT addresses:", WMNT);
+    //
+    // {
+    //     let contractAddresses = utils.getContractAddresses(networkName,"");
+    //     await hre.run("verify:verify", {
+    //         address: contractAddresses.mixedRouteQuoterV1,
+    //         contract: "contracts/lens/MixedRouteQuoterV1.sol:MixedRouteQuoterV1",
+    //         constructorArguments: [
+    //             coreContractAddresses.AgniPoolDeployer,
+    //             coreContractAddresses.AgniFactory,
+    //             v2CoreContractAddresses.AgniFactory,
+    //             WMNT
+    //         ],
+    //     });
+    // }
     {
         let contractAddresses = utils.getContractAddresses(networkName,"");
         await hre.run("verify:verify", {
@@ -97,12 +121,11 @@ async function main() {
             ],
         });
     }
-
 }
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
-main().catch((error) => {
+main2().catch((error) => {
     console.error(error);
     process.exitCode = 1;
 });
