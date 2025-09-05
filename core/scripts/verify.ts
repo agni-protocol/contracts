@@ -8,26 +8,26 @@ async function main() {
   
   let contractAddresses = utils.getContractAddresses(networkName,"");
 
-  await hre.run("verify:verify", {
-    address: contractAddresses.AgniPoolDeployer,
-    contract: "contracts/AgniPoolDeployer.sol:AgniPoolDeployer",
-    constructorArguments: [],
-  });
+  // await hre.run("verify:verify", {
+  //   address: contractAddresses.AgniPoolDeployer,
+  //   contract: "contracts/AgniPoolDeployer.sol:AgniPoolDeployer",
+  //   constructorArguments: [],
+  // });
+  //
+  // await hre.run("verify:verify", {
+  //   address: contractAddresses.AgniFactory,
+  //   contract: "contracts/AgniFactory.sol:AgniFactory",
+  //   constructorArguments: [contractAddresses.AgniPoolDeployer],
+  // });
+  //
+  //  await hre.run("verify:verify", {
+  //    address: contractAddresses.InitCodeHashAddress,
+  //    contract: "contracts/test/OutputCodeHash.sol:OutputCodeHash",
+  //    constructorArguments: [],
+  //  });
 
   await hre.run("verify:verify", {
-    address: contractAddresses.AgniFactory,
-    contract: "contracts/AgniFactory.sol:AgniFactory",
-    constructorArguments: [contractAddresses.AgniPoolDeployer],
-  });
-
-   await hre.run("verify:verify", {
-     address: contractAddresses.InitCodeHashAddress,
-     contract: "contracts/test/OutputCodeHash.sol:OutputCodeHash",
-     constructorArguments: [],
-   });
-
-  await hre.run("verify:verify", {
-    address: '0xeAfc4D6d4c3391Cd4Fc10c85D2f5f972d58C0dD5' ,
+    address: '0xe8A95b8ADf3f07C3BE5b851bb35146d0C9fDAdd8' ,
     contract: "contracts/AgniPool.sol:AgniPool",
     constructorArguments: [],
   });

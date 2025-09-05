@@ -2,7 +2,6 @@ import { ethers, upgrades,network } from "hardhat";
 const utils = require("../../common/utils");
 
 let WMNT="";
-let AGNI="";
 
 async function main() {
   const networkName = await network.name;
@@ -16,10 +15,8 @@ async function main() {
 
   if (networkName == "mantleMainnet") {
     WMNT = "0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8";
-    AGNI = "";
   } else {
-    WMNT = "0xEa12Be2389c2254bAaD383c6eD1fa1e15202b52A";
-    AGNI = "0x113667C49c053230D3232AC7d74F471Dcd42f11E";
+    WMNT = "0x67A1f4A939b477A6b7c5BF94D97E45dE87E608eF";
   }
   console.log("WMNT addresses:", WMNT);
 

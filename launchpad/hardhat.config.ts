@@ -1,66 +1,84 @@
-import { HardhatUserConfig } from "hardhat/config";
+import {HardhatUserConfig} from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomiclabs/hardhat-etherscan";
 import "@openzeppelin/hardhat-upgrades";
 import "hardhat-gas-reporter";
 import "hardhat-contract-sizer";
 import dotenv from "dotenv";
+
 dotenv.config();
 
 const owner =
-  process.env.PRIVATE_KEY !== undefined ? process.env.PRIVATE_KEY : '';
+    process.env.PRIVATE_KEY !== undefined ? process.env.PRIVATE_KEY : '';
 const keeper =
-  process.env.KEEPER_PRIVATE_KEY !== undefined ? process.env.KEEPER_PRIVATE_KEY : "";
+    process.env.KEEPER_PRIVATE_KEY !== undefined ? process.env.KEEPER_PRIVATE_KEY : "";
+
+
 
 const config: HardhatUserConfig = {
-  solidity: {
-    compilers: [
-      {
-        version: "0.7.6",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200,
-          },
-        },
-      },
-    ],
-  },
-  networks: {
-    mantleTestnet: {
-      url: process.env.MANTLE_TESTNET_URL || "",
-      accounts: [owner, keeper],
+    solidity: {
+        compilers: [
+            {
+                version: "0.7.6",
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                        runs: 200,
+                    },
+                },
+            },
+        ],
     },
-    mantleMainnet: {
-      url: process.env.MANTLE_URL || "",
-      accounts: [owner, keeper],
+    networks: {
+        mantleTestnet: {
+            url: process.env.MANTLE_TESTNET_URL || "",
+            accounts: [owner, keeper]
+        },
+        mantleMainnet: {
+            url: process.env.MANTLE_URL || "",
+            accounts: [owner, keeper]
+        },
+        mantleSepoliaTestnet: {
+            url: process.env.MANTLE_SEPOLIA_TESTNET_URL || "",
+            gasPrice: 50000000000,
+            accounts: [owner, keeper]
+        },
     },
-  },
-  gasReporter: {
-    enabled: process.env.REPORT_GAS !== undefined,
-    currency: "USD",
-  },
-  etherscan: {
-    apiKey: process.env.MANTLESCAN_API_KEY,
-    customChains: [
-      {
-        network: "mantleTestnet",
-        chainId: 5001,
-        urls: {
-          apiURL: "https://explorer.testnet.mantle.xyz/api",
-          browserURL: "https://rpc.testnet.mantle.xyz",
-        },
-      },
-      {
-        network: "mantleMainnet",
-        chainId: 5000,
-        urls: {
-          apiURL: "https://explorer.mantle.xyz/api",
-          browserURL: "https://explorer.mantle.xyz/",
-        },
-      },
-    ],
-  },
+    gasReporter: {
+        enabled: process.env.REPORT_GAS !== undefined,
+        currency: "USD",
+    },
+    etherscan: {
+        apiKey: process.env.MANTLESCAN_API_KEY,
+        customChains: [
+            {
+                network: "mantleTestnet",
+                chainId: 5001,
+                urls: {
+                    apiURL: "https://explorer.testnet.mantle.xyz/api",
+                    browserURL: "https://rpc.testnet.mantle.xyz",
+                },
+            },
+            {
+                network: "mantleSepoliaTestnet",
+                chainId: 5003,
+                urls: {
+                    apiURL: "https://api-sepolia.mantlescan.xyz/api",
+                    browserURL: "https://api-sepolia.mantlescan.xyz/",
+                },
+            },
+            {
+                network: "mantleMainnet",
+                chainId: 5000,
+                urls: {
+                    // apiURL: "https://explorer.mantle.xyz/api",
+                    // browserURL: "https://explorer.mantle.xyz/",
+                    apiURL: "https://api.mantlescan.xyz/api",
+                    browserURL: "https://mantlescan.xyz/",
+                },
+            }
+        ],
+    },
 };
 
 export default config;

@@ -14,7 +14,15 @@ async function main() {
   );
   console.log("periphery contract addresses:", peripheryContractAddresses);
 
-  let WMNT = process.env.WMNT !== undefined ? process.env.WMNT : "";
+  let WMNT =  "";
+
+
+    if (networkName == "mantleMainnet") {
+        WMNT = "0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8";
+    } else {
+        WMNT = "0x67A1f4A939b477A6b7c5BF94D97E45dE87E608eF";
+    }
+
   console.log("WMNT addresses:", WMNT);
 
   let contractAddresses = utils.getContractAddresses(networkName,"");
