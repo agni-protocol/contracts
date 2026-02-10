@@ -13,6 +13,8 @@ import './AgniLmPool.sol';
 contract AgniLmPoolDeployer {
     address public immutable masterChef;
 
+    event DeployLmPool(address indexed pool, address indexed lmPool);
+
     modifier onlyMasterChef() {
         require(msg.sender == masterChef, "Not MC");
         _;
@@ -27,5 +29,6 @@ contract AgniLmPoolDeployer {
     function deploy(IAgniPool pool) external onlyMasterChef returns (IAgniLmPool lmPool) {
         lmPool = new AgniLmPool(address(pool), masterChef, uint32(block.timestamp));
         IAgniFactory(INonfungiblePositionManager(IMasterChefV3(masterChef).nonfungiblePositionManager()).factory()).setLmPool(address(pool), address(lmPool));
+        emit DeployLmPool(address(pool), address(lmPool));
     }
 }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@chainlink/contracts/src/v0.8/KeeperCompatible.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -12,7 +12,7 @@ import "../interfaces/IReceiver.sol";
  * @dev MasterChefV3Keeper was designed to use in Ethereum chain.
  * Receiver will receive agni token, then upkeep for MasterChefV3.
  */
-contract MasterChefV3Keeper is KeeperCompatibleInterface, Ownable, Pausable {
+contract MasterChefV3Keeper is KeeperCompatibleInterface, Ownable2Step, Pausable {
     IMasterChefV3 public immutable MasterChefV3;
     IReceiver public immutable Receiver;
     IERC20 public immutable Agni;

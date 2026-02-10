@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -17,7 +17,7 @@ import "./interfaces/IWMNT.sol";
 import "./utils/Multicall.sol";
 import "./Enumerable.sol";
 
-contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, ReentrancyGuard, Enumerable {
+contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable2Step, ReentrancyGuard, Enumerable {
     using SafeERC20 for IERC20;
     using SafeCast for uint256;
     struct PoolInfo {
@@ -105,7 +105,7 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
     /// @notice Hard limit for maxmium boost factor, it must greater than BOOST_PRECISION
     uint256 public constant MAX_BOOST_PRECISION = 200 * 1e10;
     uint256 constant Q128 = 0x100000000000000000000000000000000;
-    uint256 constant MAX_U256 = type(uint256).max;
+//    uint256 constant MAX_U256 = type(uint256).max;
 
     /// @notice Record the agni amount belong to MasterChefV3.
     uint256 public agniAmountBelongToMC;
@@ -441,12 +441,14 @@ contract MasterChef is INonfungiblePositionManagerStruct, Multicall, Ownable, Re
     /// @param _to Address to.
     /// @return reward Agni reward.
     function harvestAll(uint256[] calldata _tokenIds, address _to) external nonReentrant returns (uint256 reward) {
+        uint256 totalReward = 0;
         for (uint8 index = 0; index < _tokenIds.length; index++) {
             UserPositionInfo storage positionInfo = userPositionInfos[_tokenIds[index]];
             if (positionInfo.user != msg.sender) revert NotOwner();
             if (positionInfo.liquidity == 0 && positionInfo.reward == 0) revert NoLiquidity();
-            reward = harvestOperation(positionInfo, _tokenIds[index], _to);
+            totalReward = totalReward + harvestOperation(positionInfo, _tokenIds[index], _to);
         }
+        return totalReward;
     }
 
     function harvestOperation(

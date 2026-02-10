@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -10,7 +10,7 @@ import "./interfaces/IAgniPool.sol";
 import "./interfaces/IMasterChefV3.sol";
 import "./utils/Multicall.sol";
 
-contract ExtraIncentivePool is Ownable,Multicall, ReentrancyGuard {
+contract ExtraIncentivePool is Ownable2Step,Multicall, ReentrancyGuard {
     using SafeERC20 for IERC20;
     using SafeCast for uint256;
 
@@ -76,7 +76,7 @@ contract ExtraIncentivePool is Ownable,Multicall, ReentrancyGuard {
     );
     event NewPeriodDuration(uint256 periodDuration);
     event Harvest(address indexed sender, address to, uint256 indexed tokenId, uint256 reward);
-    event Withdraw(address indexed token, address indexed to, uint256 amount);
+//    event Withdraw(address indexed token, address indexed to, uint256 amount);
 
     modifier onlyValidPool(address _pool) {
         PoolInfo storage _poolInfo  = poolInfos[_pool];
@@ -205,21 +205,21 @@ contract ExtraIncentivePool is Ownable,Multicall, ReentrancyGuard {
         if (_duration >= MIN_DURATION && _duration <= MAX_DURATION) duration = _duration;
         uint256 currentTime = block.timestamp;
         uint256 endTime = currentTime + duration;
-        uint256 incenivePerSecond;
-        uint256 inceniveAmount = _amount;
+        uint256 incentivePerSecond;
+        uint256 incentiveAmount = _amount;
         if (latestPeriodEndTime > currentTime) {
             uint256 remainingIncentiveToken = ((latestPeriodEndTime - currentTime) * latestPeriodIncentiveTokenPerSecond) / PRECISION;
             emit UpdateUpkeepPeriod(latestPeriodNumber, latestPeriodEndTime, currentTime, remainingIncentiveToken);
-            inceniveAmount += remainingIncentiveToken;
+            incentiveAmount += remainingIncentiveToken;
         }
-        incenivePerSecond = (inceniveAmount * PRECISION) / duration;
+        incentivePerSecond = (incentiveAmount * PRECISION) / duration;
         unchecked {
             latestPeriodNumber++;
             latestPeriodStartTime = currentTime + 1;
             latestPeriodEndTime = endTime;
-            latestPeriodIncentiveTokenPerSecond = incenivePerSecond;
+            latestPeriodIncentiveTokenPerSecond = incentivePerSecond;
         }
-        emit NewUpkeepPeriod(latestPeriodNumber, currentTime + 1, endTime, incenivePerSecond, inceniveAmount);
+        emit NewUpkeepPeriod(latestPeriodNumber, currentTime + 1, endTime, incentivePerSecond, incentiveAmount);
     }
 
    
