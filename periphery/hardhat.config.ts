@@ -1,9 +1,9 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
-import "@nomiclabs/hardhat-etherscan";
-import "@openzeppelin/hardhat-upgrades";
-import "hardhat-gas-reporter";
-import "hardhat-contract-sizer";
+// import "@nomiclabs/hardhat-etherscan";
+// import "@openzeppelin/hardhat-upgrades";
+// import "hardhat-gas-reporter";
+// import "hardhat-contract-sizer";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -68,7 +68,8 @@ const config: HardhatUserConfig = {
         urls: {
           // apiURL: "https://explorer.mantle.xyz/api",
           // browserURL: "https://explorer.mantle.xyz/",
-          apiURL: "https://api.mantlescan.xyz/api",
+          apiURL: "https://api.etherscan.io/v2/api",
+          // apiURL: "https://api.mantlescan.xyz/api",
           browserURL: "https://mantlescan.xyz/",
         },
       }

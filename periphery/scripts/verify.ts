@@ -25,12 +25,11 @@ async function main() {
     constructorArguments: [coreContractAddresses.AgniPoolDeployer, coreContractAddresses.AgniFactory, WMNT],
   });
 
-  // await hre.run("verify:verify", {
-  //   address: contractAddresses.QuoterV2,
-  //   contract: "contracts/lens/QuoterV2.sol:QuoterV2",
-  //   constructorArguments: [coreContractAddresses.AgniPoolDeployer, coreContractAddresses.AgniFactory, WMNT],
-  // });
-  // return
+  await hre.run("verify:verify", {
+    address: contractAddresses.QuoterV2,
+    contract: "contracts/lens/QuoterV2.sol:QuoterV2",
+    constructorArguments: [coreContractAddresses.AgniPoolDeployer, coreContractAddresses.AgniFactory, WMNT],
+  });
 
   await hre.run("verify:verify", {
     address: contractAddresses.SwapRouter,
@@ -64,6 +63,13 @@ async function main() {
     address: contractAddresses.NonfungibleTokenPositionDescriptor,
     contract:
       "contracts/NonfungibleTokenPositionDescriptorOffChain.sol:NonfungibleTokenPositionDescriptorOffChain",
+    constructorArguments: [],
+  });
+
+  await hre.run("verify:verify", {
+    address: contractAddresses.NFTDescriptor,
+    contract:
+      "contracts/libraries/NFTDescriptor.sol:NFTDescriptor",
     constructorArguments: [],
   });
 }
